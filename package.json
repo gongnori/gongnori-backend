@@ -1,0 +1,31 @@
+{
+  "name": "gongnori-backend",
+  "version": "1.0.0",
+  "description": "gongnori server application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/minhob38/gongnori-backend.git"
+  },
+  "author": "kwon, minho",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minhob38/gongnori-backend/issues"
+  },
+  "homepage": "https://github.com/minhob38/gongnori-backend#readme",
+  "dependencies": {
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.7",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}

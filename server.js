@@ -1,0 +1,36 @@
+const express = require("express");
+const http = require("http");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+
+const indexRouter = require("./routes/indexRouter");
+
+const app = express();
+const port = process.env.PORT || 8000;
+const server = http.createServer(app);
+
+server.listen(port, () => console.log(`server connection: port ${port}`));
+
+const db = mongoose.connection;
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+db.once("open", () => console.log("MongoDB Connection Success! :)"));
+db.on("error", () => console.log("MongoDB Connection Error :("));
+
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use("/", indexRouter);
+
+app.use((err, req, res, next) => {
+  if (err.status === 404) { res.status(200).end() }
+});
+
+module.exports = server;
