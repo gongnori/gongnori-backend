@@ -25,6 +25,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
+const makeMockDB = require("./utils/makeMockDB");
+makeMockDB();
+
 // app.use(cors({ origin: true, credentials: true }));
 
 app.use(morgan("dev"));

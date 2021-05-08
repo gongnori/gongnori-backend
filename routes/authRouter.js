@@ -1,7 +1,6 @@
 const express = require("express");
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../models/User");
 require("dotenv").config();
