@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
@@ -6,6 +7,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const indexRouter = require("./routes/indexRouter");
+const authRouter = require("./routes/authRouter");
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -23,11 +25,14 @@ mongoose.connect(process.env.MONGODB_URI, {
 db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
+// app.use(cors({ origin: true, credentials: true }));
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
+app.use("/auth", authRouter);
 
 app.use((err, req, res, next) => {
   if (err.status === 404) { res.status(200).end() }
