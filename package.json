@@ -4,7 +4,7 @@
   "description": "gongnori server application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "mocha spec"
   },
   "repository": {
@@ -21,6 +21,8 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.0",
     "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.7",
     "morgan": "^1.10.0"
   },
