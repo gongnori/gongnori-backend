@@ -8,6 +8,7 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const indexRouter = require("./routes/indexRouter");
 const authRouter = require("./routes/authRouter");
+const matchRouter = require("./routes/matchRouter");
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -26,7 +27,9 @@ db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
 const makeMockDB = require("./utils/makeMockDB");
-makeMockDB();
+if (true) {
+  makeMockDB();
+}
 
 // app.use(cors({ origin: true, credentials: true }));
 
@@ -36,6 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
+app.use("/match", matchRouter);
 
 app.use((err, req, res, next) => {
   if (err.status === 404) { res.status(200).end() }
