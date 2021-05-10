@@ -1,23 +1,22 @@
 const express = require("express");
 const createError = require("http-errors");
 const router = express.Router();
-const Match = require("../models/Match");
+const Playground = require("../models/Playground");
 require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
   try {
-    const { year, month, date } = req.query;
+    const { province, city, district } = req.query;
 
-    const thresMin = new Date(year, (parseInt(month, 10) - 1).toString(), date);
-    const thresMax = new Date(year, (parseInt(month, 10) - 1).toString(), (parseInt(date, 10) + 1));
-
-    const matches = await Match.find({
-      "playtime.start": { $gte: thresMin, $lte: thresMax },
+    const playgrounds = await Playground.find({
+      "address.province": province,
+      "address.city": city,
+      "address.district": district,
     });
 
     res.status(200).json({
       message: "success",
-      data: matches,
+      data: playgrounds,
       error: null,
     });
   } catch (err) {
@@ -27,7 +26,7 @@ router.get("/", async (req, res, next) => {
       error: "error",
     });
 
-    console.error(`GET : /match/query - ${err.messsage}`);
+    console.error(`GET : /playground/query - ${err.messsage}`);
     next(createError(500, "Internal Server Error"));
   }
 });

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const korReg = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
 
-const playGroundSchema = new mongoose.Schema({
+const playgroundSchema = new mongoose.Schema({
   sports: { type: String, require: true, lowercase: true },
   name: { type: String, require: true, lowercase: true },
   address: {
@@ -18,4 +18,4 @@ const playGroundSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("PlayGround", playGroundSchema);
+module.exports = mongoose.model("PlayGround", playgroundSchema);

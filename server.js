@@ -9,6 +9,7 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 const indexRouter = require("./routes/indexRouter");
 const authRouter = require("./routes/authRouter");
 const matchRouter = require("./routes/matchRouter");
+const playgroundRouter = require("./routes/playgroundRouter");
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/match", matchRouter);
+app.use("/playground", playgroundRouter);
 
 app.use((err, req, res, next) => {
   if (err.status === 404) { res.status(200).end() }
