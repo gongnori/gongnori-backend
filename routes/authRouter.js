@@ -7,11 +7,11 @@ require("dotenv").config();
 
 router.post("/login", async (req, res, next) => {
   try {
-    const { name, email, id } = req.body.userInfo;
-    const user = await User.findOne({ uid: id });
+    const { name, email } = req.body.userInfo;
+    const user = await User.findOne({ email });
 
     if (!user) {
-      await User.create({ uid: id, name, email });
+      await User.create({ name, email });
     }
 
     const token = jwt.sign(

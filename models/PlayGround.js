@@ -5,7 +5,7 @@ const playgroundSchema = new mongoose.Schema({
   sports: { type: String, require: true, lowercase: true },
   name: { type: String, require: true, lowercase: true },
   address: {
-    province: { type: String, require: true, trim: true, match: korReg }, //한국어만
+    province: { type: String, require: true, trim: true, match: korReg },
     city: { type: String, require: true, trim: true, match: korReg },
     district: { type: String, require: true, trim: true, match: korReg },
     town: { type: String, require: true, trim: true, match: korReg },

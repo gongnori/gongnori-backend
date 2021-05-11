@@ -1,0 +1,54 @@
+[
+  {
+    "province": "경기도",
+    "city": "용인시",
+    "district": "수지구"
+  },
+  {
+    "province": "경기도",
+    "city": "용인시",
+    "district": "기흥구"
+  },
+  {
+    "province": "경기도",
+    "city": "용인시",
+    "district": "처인구"
+  },
+
+  {
+    "province": "경기도",
+    "city": "성남시",
+    "district": "수정구"
+  },
+  {
+    "province": "경기도",
+    "city": "성남시",
+    "district": "중원구"
+  },
+  {
+    "province": "경기도",
+    "city": "성남시",
+    "district": "분당구"
+  },
+
+  {
+    "province": "경기도",
+    "city": "수원시",
+    "district": "팔달구"
+  },
+  {
+    "province": "경기도",
+    "city": "수원시",
+    "district": "장안구"
+  },
+  {
+    "province": "경기도",
+    "city": "수원시",
+    "district": "영통구"
+  },
+  {
+    "province": "경기도",
+    "city": "수원시",
+    "district": "권선구"
+  }
+]

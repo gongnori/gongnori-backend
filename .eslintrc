@@ -26,6 +26,7 @@
     "comma-dangle": ["warn", "always-multiline", { "objects": "always" }],
     "object-curly-newline": "off",
     "eol-last": "warn",
+    "no-plusplus": "off",
     "no-undef": "warn",
     "no-unused-vars": "warn",
     "consistent-return": "off",
