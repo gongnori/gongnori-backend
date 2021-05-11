@@ -32,6 +32,7 @@
     "consistent-return": "off",
     "no-underscore-dangle": "off",
     "import/newline-after-import": "off",
-    "no-warning-comments": ["warn", { "terms": [""], "location": "anywhere" }]
+    "no-warning-comments": ["warn", { "terms": [""], "location": "anywhere" }],
+    "arrow-body-style": "off"
   }
 }

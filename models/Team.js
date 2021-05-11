@@ -15,6 +15,7 @@ const teamSchema = new mongoose.Schema({
     manner: { type: Number, required: true, min: 1, max: 5 },
     ability: { type: Number, required: true, min: 1, max: 5 },
   },
+  matches: [{ type: mongoose.Types.ObjectId, ref: "Match" }],
 });
 
 module.exports = mongoose.model("Team", teamSchema);

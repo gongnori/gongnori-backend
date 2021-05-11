@@ -7,12 +7,9 @@ const matchSchema = new mongoose.Schema({
     start: { type: Date, require: true, default: Date.now() },
     end: { type: Date, require: true, default: Date.now() },
   },
-  playground: { type: String, require: true, lowercase: true }, // 나중에 oid로
+  playground: { type: mongoose.Types.ObjectId },
   match_type: { type: String, require: true, lowercase: true }, // 종목에 따른 validation
-  teams: {
-    home: { type: String, require: true },
-    away: { type: String, require: true },
-  }, // 나중에 oid로
+  teams: [{ type: mongoose.Types.ObjectId }],
 });
 
 module.exports = mongoose.model("Match", matchSchema);

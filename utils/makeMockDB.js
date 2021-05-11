@@ -1,95 +1,77 @@
 /**
  *  @function it returns user, match, team mockdb as json, based on playground database
- *
- *
- *
  */
 
 const mongoose = require("mongoose");
 const { uniqueNamesGenerator, adjectives, names } = require('unique-names-generator');
 
-const User = require("../models/User");
-const Team = require("../models/Team");
 const Match = require("../models/Match");
 const Playground = require("../models/Playground");
+const Team = require("../models/Team");
+const User = require("../models/User");
 
-const matchMock = require("../models/matchMock.json");
-const playgrounds = require("../models/playground.json");
+const makeRandomNumber = require("./makeRandomNumber");
+
 const koreanNames = require("../models/koreanName.json");
-const location = require("../models/locationMock.json");
-
+const locations = require("../models/location.json");
+const playgrounds = require("../models/playground.json");
 
 const makeMock = () => {
-  const playgroundOids = [];
   const memberNum = 10;
   const teamNum = 10;
-
-  playgrounds.forEach((playground) => {
-    const playgroundOid = mongoose.Types.ObjectId();
-    playground._id = playgroundOid;
-    playgroundOids.push(playgroundOid);
-  });
+  const matchNum = 5;
 
   const teams = [];
   const users = [];
+  const matches = [];
+
+  const playgroundsWithOid = playgrounds.map((playground) => {
+    const playgroundOid = mongoose.Types.ObjectId();
+    playground._id = playgroundOid;
+
+    return playground;
+  });
 
   for (let i = 0; i < teamNum; i++) {
-    const randomLocationIdx = Math.min(Math.floor(10 * Math.random()), 9);
-    const randomManner = Math.min(Math.floor(5 * Math.random()) + 1, 5);
-    const randomAbility = Math.min(Math.floor(5 * Math.random()) + 1, 5);
-    const randomTeamNameIdx = Math.min(Math.floor(200 * Math.random()), 198);
+    const teamOid = mongoose.Types.ObjectId();
+    const randomLocationIdx = makeRandomNumber(0, 9);
+    const randomManner = makeRandomNumber(1, 5);
+    const randomAbility = makeRandomNumber(1, 5);
+    const randomTeamNameIdx = makeRandomNumber(0, 199);
 
-    const team1 = {
-      name: `FC ${koreanNames[randomTeamNameIdx]}`,
+    const team = {
+      _id: teamOid,
+      name: `FC${koreanNames[randomTeamNameIdx]}`,
       sports: "football",
       members: [],
       captin: null,
-      location: location[randomLocationIdx],
+      location: locations[randomLocationIdx],
       repute: {
         manner: randomManner,
         ability: randomAbility,
       },
+      matches: [],
     };
-
-    const team2 = {
-      name: `AS ${koreanNames[randomTeamNameIdx + 1]}`,
-      sports: "football",
-      members: [],
-      captin: null,
-      location: location[randomLocationIdx],
-      repute: {
-        manner: randomManner,
-        ability: randomAbility,
-      },
-    };
-
-    const teamOid1 = mongoose.Types.ObjectId();
-    const teamOid2 = mongoose.Types.ObjectId();
 
     for (let j = 0; j < memberNum; j++) {
       const userOid = mongoose.Types.ObjectId();
-      team1.members.push(userOid);
-      team2.members.push(userOid);
-      team1.captin = userOid;
-      team2.captin = userOid;
+      team.members.push(userOid);
+      team.captin = userOid;
 
       const email = uniqueNamesGenerator({
         dictionaries: [adjectives, names],
         separator: "",
       });
 
-      const randomUserNameIdx = Math.min(Math.floor(100 * Math.random()), 99);
+      const randomUserNameIdx = makeRandomNumber(0, koreanNames.length - 1);
       const userName = koreanNames[randomUserNameIdx];
 
-      const randomLocationIdx = Math.min(Math.floor(10 * Math.random()), 8);
-      const userLocations = [
-        location[randomLocationIdx],
-        location[randomLocationIdx + 1]
-      ];
+      const randomLocationIdx = makeRandomNumber(0, locations.length - 2);
+      const userLocations = [locations[randomLocationIdx], locations[randomLocationIdx + 1]];
 
       const user = {
         _id: userOid,
-        teams: [teamOid1, teamOid2],
+        teams: [teamOid],
         name: userName,
         email: `${email}@gmail.com`,
         location: userLocations,
@@ -98,27 +80,56 @@ const makeMock = () => {
       users.push(user);
     }
 
-    teams.push(team1, team2);
+    for (let k = 0; k < matchNum; k++) {
+      const matchOid = mongoose.Types.ObjectId();
+      const randomPlaygroundIdx = makeRandomNumber(0, playgroundsWithOid.length - 1);
+      const start = new Date();
+
+      team.matches.push(matchOid);
+
+      start.setDate(start.getDate() + makeRandomNumber(1, 7));
+      start.setHours(makeRandomNumber(6, 20));
+      start.setMinutes(0);
+
+      const end = new Date(start);
+      end.setHours(end.getHours() + 2);
+
+      const match = {
+        _id: matchOid,
+        sports: "football",
+        created_at: Date.now(),
+        playtime: {
+          start,
+          end,
+        },
+        playground: playgroundsWithOid[randomPlaygroundIdx]._id,
+        match_type: "5:5",
+        teams: [teamOid],
+      };
+
+      matches.push(match);
+    }
+
+    teams.push(team);
   }
 
-  return { users, teams };
+  return { users, teams, matches, playgroundsWithOid };
 };
 
 const makeMockDB = async () => {
-  // await Match.remove();
-  // await matchMock.forEach((doc) => Match.create(doc));
+  const { users, teams, matches, playgroundsWithOid } = makeMock();
 
-  // await Playground.remove();
-  // await playgroundMock.forEach((doc) => Playground.create(doc));
-  const { users, teams } = makeMock();
-// console.log(teams)
+  await Playground.remove();
+  await playgroundsWithOid.forEach((doc) => Playground.create(doc));
+
+  await Match.remove();
+  await matches.forEach((doc) => Match.create(doc));
 
   await User.remove();
   await users.forEach((doc) => User.create(doc));
-console.log("!")
+
   await Team.remove();
   await teams.forEach((doc) => Team.create(doc));
-console.log("!")
 };
 
 module.exports = makeMockDB;
