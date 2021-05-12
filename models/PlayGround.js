@@ -18,4 +18,4 @@ const playgroundSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("PlayGround", playgroundSchema);
+module.exports = mongoose.model("Playground", playgroundSchema);

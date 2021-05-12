@@ -87,7 +87,7 @@ const makeMock = () => {
 
       team.matches.push(matchOid);
 
-      start.setDate(start.getDate() + makeRandomNumber(1, 7));
+      start.setDate(start.getDate() + makeRandomNumber(0, 6));
       start.setHours(makeRandomNumber(6, 20));
       start.setMinutes(0);
 
