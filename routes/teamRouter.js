@@ -10,7 +10,12 @@ router.get("/my-team/:myTeamId", async (req, res, next) => {
   try {
     const { myTeamId } = req.params;
     const team = await Team.findById({_id: myTeamId })
-      .populate("captin", "name email").populate("matches").populate("members", "name email");
+      .populate("captin", "name email")
+      .populate("members", "name email")
+      .populate({ path: "matches", populate: { path: "teams", select: "name"}})
+      .populate({ path: "matches", populate: { path: "playground", select: "name address" }});
+      // .populate("matches");
+console.log(team)
     res.status(200).json({
       message: "success",
       data: team,

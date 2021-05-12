@@ -113,10 +113,11 @@ const makeMock = () => {
     teams.push(team);
   }
 
-  const oId = mongoose.Types.ObjectId();
+  const oId1 = mongoose.Types.ObjectId();
+  const oId2 = mongoose.Types.ObjectId();
 
   users.push({
-    _id: oId,
+    _id: oId1,
     teams: [teams[0]._id, teams[1]._id],
     name: "minho kwon",
     email: "minhob38@gmail.com",
@@ -133,8 +134,33 @@ const makeMock = () => {
       }],
   });
 
-  teams[0].captin = oId;
-  teams[0].members.push(oId);
+  users.push({
+    _id: oId2,
+    teams: [teams[2]._id, teams[3]._id],
+    name: "jerry",
+    email: "skunkworksflightcontrol@gmail.com",
+    locations: [
+      {
+        province: "경기도",
+        city: "성남시",
+        district: "분당구",
+      },
+      {
+        province: "경기도",
+        city: "용인시",
+        district: "기흥구",
+      }],
+  });
+
+  teams[0].captin = oId1;
+  teams[0].members.push(oId1);
+  teams[1].captin = oId1;
+  teams[1].members.push(oId1);
+
+  teams[2].captin = oId2;
+  teams[2].members.push(oId2);
+  teams[3].captin = oId2;
+  teams[3].members.push(oId2);
 
   return { users, teams, matches, playgroundsWithOid };
 };
