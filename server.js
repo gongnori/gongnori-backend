@@ -29,7 +29,7 @@ db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
 const makeMockDB = require("./utils/makeMockDB");
-if (true) {
+if (false) {
   makeMockDB();
 }
 

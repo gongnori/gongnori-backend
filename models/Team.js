@@ -6,6 +6,7 @@ const teamSchema = new mongoose.Schema({
   sports: { type: String, require: true, lowercase: true },
   name: { type: String, require: true, lowercase: true },
   captin: { type: mongoose.Types.ObjectId, ref: "User" },
+  members: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   location: {
     province: { type: String, require: true, trim: true, match: korReg },
     city: { type: String, require: true, trim: true, match: korReg },

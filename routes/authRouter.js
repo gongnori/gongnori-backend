@@ -7,8 +7,9 @@ require("dotenv").config();
 
 router.post("/login", async (req, res, next) => {
   try {
-    const { name, email } = req.body.userInfo;
-    const user = await User.findOne({ email });
+    const { name, email } = req.body;
+    const user = await User.findOne({ email }).populate("teams", "_id name");
+    const { locations, teams } = user;
 
     if (!user) {
       await User.create({ name, email });
@@ -22,7 +23,7 @@ router.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: token,
+      data: { token, locations, teams },
       error: null,
     });
   } catch (err) {

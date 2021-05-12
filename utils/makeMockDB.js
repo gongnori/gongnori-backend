@@ -74,7 +74,7 @@ const makeMock = () => {
         teams: [teamOid],
         name: userName,
         email: `${email}@gmail.com`,
-        location: userLocations,
+        locations: [userLocations],
       };
 
       users.push(user);
@@ -112,6 +112,29 @@ const makeMock = () => {
 
     teams.push(team);
   }
+
+  const oId = mongoose.Types.ObjectId();
+
+  users.push({
+    _id: oId,
+    teams: [teams[0]._id, teams[1]._id],
+    name: "minho kwon",
+    email: "minhob38@gmail.com",
+    locations: [
+      {
+        province: "경기도",
+        city: "용인시",
+        district: "수지구",
+      },
+      {
+        province: "경기도",
+        city: "용인시",
+        district: "기흥구",
+      }],
+  });
+
+  teams[0].captin = oId;
+  teams[0].members.push(oId);
 
   return { users, teams, matches, playgroundsWithOid };
 };

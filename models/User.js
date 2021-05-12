@@ -6,7 +6,7 @@ const korReg = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
 const userSchema = new mongoose.Schema({
   name: { type: String, require: true, lowercase: true },
   email: { type: String, require: true, unique: true, lowercase: true, match: emailReg },
-  location: [{
+  locations: [{
     province: { type: String, require: true, trim: true, match: korReg },
     city: { type: String, require: true, trim: true, match: korReg },
     district: { type: String, require: true, trim: true, match: korReg },
