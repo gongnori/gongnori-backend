@@ -14,8 +14,7 @@ router.get("/", async (req, res, next) => {
     const matches = await Match.find({ //지역에 따라 query하는 법 찾아보자...
       sports,
       "playtime.start": { $gte: thresMin, $lte: thresMax },
-    }).populate("teams")
-      .populate("playground")
+    }).populate("playground").populate({ path:"teams", populate: { path: "location" }});
 
     res.status(200).json({
       message: "success",
