@@ -74,7 +74,7 @@ const makeMock = () => {
         teams: [teamOid],
         name: userName,
         email: `${email}@gmail.com`,
-        locations: [userLocations],
+        locations: userLocations,
       };
 
       users.push(user);
@@ -126,11 +126,19 @@ const makeMock = () => {
         province: "경기도",
         city: "용인시",
         district: "수지구",
+        location: {
+          latitude: 37.32227,
+          longitude: 127.09747,
+        },
       },
       {
         province: "경기도",
         city: "용인시",
         district: "기흥구",
+        location: {
+          latitude: 37.28054,
+          longitude: 127.11465,
+        },
       }],
   });
 
@@ -144,11 +152,19 @@ const makeMock = () => {
         province: "경기도",
         city: "성남시",
         district: "분당구",
+        location: {
+          latitude: 37.38300,
+          longitude: 127.11893,
+        },
       },
       {
         province: "경기도",
         city: "용인시",
         district: "기흥구",
+        location: {
+          latitude: 37.28054,
+          longitude: 127.11465,
+        },
       }],
   });
 

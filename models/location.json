@@ -2,52 +2,91 @@
   {
     "province": "경기도",
     "city": "용인시",
-    "district": "수지구"
+    "district": "수지구",
+    "location": {
+      "latitude": 37.32227,
+      "longitude": 127.09747
+    }
   },
   {
     "province": "경기도",
     "city": "용인시",
-    "district": "기흥구"
+    "district": "기흥구",
+    "location": {
+      "latitude": 37.28054,
+      "longitude": 127.11465
+    }
   },
   {
     "province": "경기도",
     "city": "용인시",
-    "district": "처인구"
+    "district": "처인구",
+    "location": {
+      "latitude": 37.23460,
+      "longitude": 127.20137
+    }
   },
   {
     "province": "경기도",
     "city": "성남시",
-    "district": "수정구"
+    "district": "수정구",
+    "location": {
+      "latitude": 37.45050,
+      "longitude": 127.14549
+    }
   },
   {
     "province": "경기도",
     "city": "성남시",
-    "district": "중원구"
+    "district": "중원구",
+    "location": {
+      "latitude": 37.43068,
+      "longitude": 127.13726
+    }
   },
   {
     "province": "경기도",
     "city": "성남시",
-    "district": "분당구"
-  },
-
-  {
-    "province": "경기도",
-    "city": "수원시",
-    "district": "팔달구"
+    "district": "분당구",
+    "location": {
+      "latitude": 37.38300,
+      "longitude": 127.11893
+    }
   },
   {
     "province": "경기도",
     "city": "수원시",
-    "district": "장안구"
+    "district": "팔달구",
+    "location": {
+      "latitude": 37.28267,
+      "longitude": 127.01988
+    }
   },
   {
     "province": "경기도",
     "city": "수원시",
-    "district": "영통구"
+    "district": "장안구",
+    "location": {
+      "latitude": 37.30399,
+      "longitude": 127.01019
+    }
   },
   {
     "province": "경기도",
     "city": "수원시",
-    "district": "권선구"
+    "district": "영통구",
+    "location": {
+      "latitude": 37.25975,
+      "longitude": 127.04649
+    }
+  },
+  {
+    "province": "경기도",
+    "city": "수원시",
+    "district": "권선구",
+    "location": {
+      "latitude": 37.25785,
+      "longitude": 127.97230
+    }
   }
 ]
