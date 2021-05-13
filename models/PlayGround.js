@@ -12,7 +12,8 @@ const playgroundSchema = new mongoose.Schema({
     detail: { type: String, require: true },
   },
   contact: { type: String, unique: true, require: true }, // 나중에 정규식 넣기...
-  location: {
+  // location: { type: mongoose.Types.ObjectId, ref: "Location" },
+  position: {
     latitude: { type: Number, required: true, min: -90, max: 90 },
     longitude: { type: Number, required: true, min: -180, max: 180 },
   },

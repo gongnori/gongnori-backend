@@ -9,12 +9,16 @@ const Match = require("../models/Match");
 const Playground = require("../models/Playground");
 const Team = require("../models/Team");
 const User = require("../models/User");
+const Location = require("../models/Location");
+const Sports = require("../models/Sports")
 
 const makeRandomNumber = require("./makeRandomNumber");
 
 const koreanNames = require("../models/koreanName.json");
 const locations = require("../models/location.json");
 const playgrounds = require("../models/playground.json");
+const emblems = require("../models/emblems.json");
+const sports = require("../models/sports.json");
 
 const makeMock = () => {
   const memberNum = 10;
@@ -24,6 +28,13 @@ const makeMock = () => {
   const teams = [];
   const users = [];
   const matches = [];
+
+  const locationsWithOid = locations.map((location) => {
+    const locationOid = mongoose.Types.ObjectId();
+    location._id = locationOid;
+
+    return location;
+  });
 
   const playgroundsWithOid = playgrounds.map((playground) => {
     const playgroundOid = mongoose.Types.ObjectId();
@@ -38,6 +49,7 @@ const makeMock = () => {
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
     const randomTeamNameIdx = makeRandomNumber(0, 199);
+    const randomEmblemIdx = makeRandomNumber(0, emblems.length - 1);
 
     const team = {
       _id: teamOid,
@@ -45,12 +57,13 @@ const makeMock = () => {
       sports: "football",
       members: [],
       captin: null,
-      location: locations[randomLocationIdx],
+      location: locationsWithOid[randomLocationIdx],
       repute: {
         manner: randomManner,
         ability: randomAbility,
       },
       matches: [],
+      emblem: emblems[randomEmblemIdx],
     };
 
     for (let j = 0; j < memberNum; j++) {
@@ -67,7 +80,10 @@ const makeMock = () => {
       const userName = koreanNames[randomUserNameIdx];
 
       const randomLocationIdx = makeRandomNumber(0, locations.length - 2);
-      const userLocations = [locations[randomLocationIdx], locations[randomLocationIdx + 1]];
+      const userLocations = [
+        locationsWithOid[randomLocationIdx],
+        locationsWithOid[randomLocationIdx + 1],
+      ];
 
       const user = {
         _id: userOid,
@@ -122,24 +138,9 @@ const makeMock = () => {
     name: "minho kwon",
     email: "minhob38@gmail.com",
     locations: [
-      {
-        province: "경기도",
-        city: "용인시",
-        district: "수지구",
-        location: {
-          latitude: 37.32227,
-          longitude: 127.09747,
-        },
-      },
-      {
-        province: "경기도",
-        city: "용인시",
-        district: "기흥구",
-        location: {
-          latitude: 37.28054,
-          longitude: 127.11465,
-        },
-      }],
+      locationsWithOid[0],
+      locationsWithOid[1],
+    ],
   });
 
   users.push({
@@ -148,24 +149,9 @@ const makeMock = () => {
     name: "jerry",
     email: "skunkworksflightcontrol@gmail.com",
     locations: [
-      {
-        province: "경기도",
-        city: "성남시",
-        district: "분당구",
-        location: {
-          latitude: 37.38300,
-          longitude: 127.11893,
-        },
-      },
-      {
-        province: "경기도",
-        city: "용인시",
-        district: "기흥구",
-        location: {
-          latitude: 37.28054,
-          longitude: 127.11465,
-        },
-      }],
+      locationsWithOid[0],
+      locationsWithOid[5],
+    ],
   });
 
   teams[0].captin = oId1;
@@ -178,14 +164,20 @@ const makeMock = () => {
   teams[3].captin = oId2;
   teams[3].members.push(oId2);
 
-  return { users, teams, matches, playgroundsWithOid };
+  return { users, teams, matches, locationsWithOid, playgroundsWithOid };
 };
 
 const makeMockDB = async () => {
-  const { users, teams, matches, playgroundsWithOid } = makeMock();
+  const { users, teams, matches, locationsWithOid, playgroundsWithOid } = makeMock();
+
+  await Sports.remove();
+  await sports.forEach((doc) => Sports.create(doc));
 
   await Playground.remove();
   await playgroundsWithOid.forEach((doc) => Playground.create(doc));
+
+  await Location.remove();
+  await locationsWithOid.forEach((doc) => Location.create(doc));
 
   await Match.remove();
   await matches.forEach((doc) => Match.create(doc));

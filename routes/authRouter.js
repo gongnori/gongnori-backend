@@ -8,7 +8,7 @@ require("dotenv").config();
 router.post("/login", async (req, res, next) => {
   try {
     const { name, email } = req.body;
-    const user = await User.findOne({ email }).populate("teams", "_id name");
+    const user = await User.findOne({ email }).populate("teams", "_id name").populate("locations");
     const { locations, teams } = user;
 
     if (!user) {

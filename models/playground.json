@@ -10,7 +10,7 @@
       "detail": "1078"
     },
     "contact": "031-265-5611",
-    "location": { "latitude": 37.32418, "longitude": 127.09565 }
+    "position": { "latitude": 37.32418, "longitude": 127.09565 }
   },
   {
     "sports": "football",
@@ -23,7 +23,7 @@
       "detail": "29-7"
     },
     "contact": "010-9740-9770",
-    "location": { "latitude": 37.32842, "longitude": 127.09591 }
+    "position": { "latitude": 37.32842, "longitude": 127.09591 }
   },
   {
     "sports": "football",
@@ -36,7 +36,7 @@
       "detail": "45"
     },
     "contact": "010-8007-3356",
-    "location": { "latitude": 37.32374, "longitude": 127.07907 }
+    "position": { "latitude": 37.32374, "longitude": 127.07907 }
   },
   {
     "sports": "football",
@@ -49,6 +49,6 @@
       "detail": "1113"
     },
     "contact": "031-283-0979",
-    "location": { "latitude": 37.28401, "longitude": 127.14256 }
+    "position": { "latitude": 37.28401, "longitude": 127.14256 }
   }
 ]

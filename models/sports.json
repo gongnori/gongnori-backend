@@ -1,0 +1,17 @@
+[
+  {
+    "sports": "football",
+    "match_type": ["5:5", "6:6", "11:11"],
+    "korean_name": "축구"
+  },
+  {
+    "sports": "baseball",
+    "match_type": ["7이닝", "9이닝"],
+    "korean_name": "야구"
+  },
+  {
+    "sports": "basketball",
+    "match_type": ["1:1", "3:3", "5:5"],
+    "korean_name": "농구"
+  }
+]

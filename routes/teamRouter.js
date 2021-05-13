@@ -20,7 +20,7 @@ const upload = multer({
     acl: "public-read",
     bucket: "minho-bucket",
     metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
+      cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
       cb(null, Date.now().toString());
@@ -28,15 +28,14 @@ const upload = multer({
   }),
 });
 
-
-
 router.get("/my-team/:myTeamId", async (req, res, next) => {
   try {
     const { myTeamId } = req.params;
     const team = await Team.findById({_id: myTeamId })
       .populate("captin", "name email")
       .populate("members", "name email")
-      .populate({ path: "matches", populate: { path: "teams", select: "name"}})
+      .populate("location")
+      .populate({ path: "matches", populate: { path: "teams", select: "name" } })
       .populate({ path: "matches", populate: { path: "playground", select: "name address" }});
 
     res.status(200).json({
@@ -56,9 +55,9 @@ router.get("/my-team/:myTeamId", async (req, res, next) => {
   }
 });
 
-router.post("/", upload.single("image"), (req, res, next) => {
-  console.log(req.file)
+router.post("/", (req, res, next) => {
   try {
+    console.log(req.body)
     res.status(200).json({
       message: "success",
       data: null,
@@ -71,7 +70,28 @@ router.post("/", upload.single("image"), (req, res, next) => {
       error: "error",
     });
 
-    console.error(`POST : /team - ${err.messsage}`);
+    console.error(`POST : /team/emblem - ${err.messsage}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
+router.post("/emblem", upload.single("image"), (req, res, next) => {
+  try {
+    const s3Uri = req.file.location;
+
+    res.status(200).json({
+      message: "success",
+      data: s3Uri,
+      error: null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.error(`POST : /team/emblem - ${err.messsage}`);
     next(createError(500, "Internal Server Error"));
   }
 });

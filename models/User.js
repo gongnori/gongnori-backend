@@ -6,15 +6,16 @@ const korReg = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
 const userSchema = new mongoose.Schema({
   name: { type: String, require: true, lowercase: true },
   email: { type: String, require: true, unique: true, lowercase: true, match: emailReg },
-  locations: [{
-    province: { type: String, require: true, trim: true, match: korReg },
-    city: { type: String, require: true, trim: true, match: korReg },
-    district: { type: String, require: true, trim: true, match: korReg },
-    location: {
-      latitude: { type: Number, required: true, min: -90, max: 90 },
-      longitude: { type: Number, required: true, min: -180, max: 180 },
-    },
-  }],
+  // locations: [{
+  //   province: { type: String, require: true, trim: true, match: korReg },
+  //   city: { type: String, require: true, trim: true, match: korReg },
+  //   district: { type: String, require: true, trim: true, match: korReg },
+  //   location: {
+  //     latitude: { type: Number, required: true, min: -90, max: 90 },
+  //     longitude: { type: Number, required: true, min: -180, max: 180 },
+  //   },
+  // }],
+  locations: [{ type: mongoose.Types.ObjectId, ref: "Location" }],
   desc: { type: String, default: "", maxLength: 100 },
   messages: [{ type: mongoose.Types.ObjectId, ref: "Message" }],
   teams: [{ type: mongoose.Types.ObjectId, ref: "Team" }],
