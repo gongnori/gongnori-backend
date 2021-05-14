@@ -70,7 +70,8 @@ router.post("/", async (req, res, next) => {
     if (!team) {
       const user = await User.findOne({ email });
       const newTeam = await Team.create({ name, location, sports, captin: user, members: [user] });
-      user.teams.push(newTeam);
+      console.log(user.teams)
+      user.teams.push(newTeam._id);
       await user.save();
       return res.status(200).json({
         message: "success",
@@ -78,12 +79,6 @@ router.post("/", async (req, res, next) => {
         error: null,
       });
     }
-
-    res.status(200).json({
-      message: "team already exist",
-      data: null,
-      error: null,
-    });
   } catch (err) {
     res.status(500).json({
       message: "fail",

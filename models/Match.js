@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const matchSchema = new mongoose.Schema({
-  sports: { type: String, require: true, lowercase: true },
+  // sports: { type: String, require: true, lowercase: true },
+  sports: { type: mongoose.Types.ObjectId, ref: "Sports" },
   created_at: { type: Date, require: true, default: Date.now() },
   playtime: {
     start: { type: Date, require: true, default: Date.now() },
