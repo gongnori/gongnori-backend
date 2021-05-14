@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
   try {
     const locations = await Location.find();
     const sports = await Sports.find();
-console.log(locations)
+
     res.status(200).json({
       message: "success",
       data: { locations, sports},

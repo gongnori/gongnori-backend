@@ -167,26 +167,25 @@ const makeMock = () => {
   return { users, teams, matches, locationsWithOid, playgroundsWithOid };
 };
 
-const makeMockDB = async () => {
+const makeMockDB = async (isInitial) => {
   const { users, teams, matches, locationsWithOid, playgroundsWithOid } = makeMock();
 
-  await Sports.remove();
-  await sports.forEach((doc) => Sports.create(doc));
-
+  await Location.remove();
+  await Match.remove();
   await Playground.remove();
+  await Sports.remove();
+  await Team.remove();
+  await User.remove();
+
+  await locationsWithOid.forEach((doc) => Location.create(doc));
+  await sports.forEach((doc) => Sports.create(doc));
   await playgroundsWithOid.forEach((doc) => Playground.create(doc));
 
-  await Location.remove();
-  await locationsWithOid.forEach((doc) => Location.create(doc));
+  if (isInitial) { return }
 
-  await Match.remove();
   await matches.forEach((doc) => Match.create(doc));
-
-  await User.remove();
-  await users.forEach((doc) => User.create(doc));
-
-  await Team.remove();
   await teams.forEach((doc) => Team.create(doc));
+  await users.forEach((doc) => User.create(doc));
 };
 
 module.exports = makeMockDB;

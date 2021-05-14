@@ -31,7 +31,7 @@ db.on("error", () => console.log("MongoDB Connection Error :("));
 
 const makeMockDB = require("./utils/makeMockDB");
 if (false) {
-  makeMockDB();
+  makeMockDB(true);
 }
 
 // app.use(cors({ origin: true, credentials: true }));

@@ -8,12 +8,12 @@ require("dotenv").config();
 router.post("/login", async (req, res, next) => {
   try {
     const { name, email } = req.body;
-    const user = await User.findOne({ email }).populate("teams", "_id name").populate("locations");
-    const { locations, teams } = user;
+    let user = await User.findOne({ email }).populate("teams", "_id name").populate("locations");
 
     if (!user) {
-      await User.create({ name, email });
+      user = await User.create({ name, email });
     }
+    const { locations, teams } = user;
 
     const token = jwt.sign(
       { name, email },
@@ -33,7 +33,29 @@ router.post("/login", async (req, res, next) => {
       error: "error",
     });
 
-    console.error(`POST : /auth/login - ${err.messsage}`);
+    console.log(`POST : /auth/login - ${err.message}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
+router.post("/location", async (req, res, next) => {
+  try {
+    const { email, locations } = req.body;
+    await User.findOneAndUpdate({ email }, { locations });
+
+    res.status(200).json({
+      message: "success",
+      data: null,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`POST : /auth/location - ${err.message}`);
     next(createError(500, "Internal Server Error"));
   }
 });

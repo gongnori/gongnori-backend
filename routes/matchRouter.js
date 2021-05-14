@@ -35,7 +35,6 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    console.log(req.body)
     // const {} = req.body
 
     // const thresMin = new Date(year, (parseInt(month, 10) - 1).toString(), date);
