@@ -18,61 +18,11 @@ router.get("/", async (req, res, next) => {
       sports: sportsOid,
       "playtime.start": { $gte: thresMin, $lte: thresMax },
     }).populate("playground")
-      .populate({
-        path: "teams",
-        populate: { path: "location" },
-      })
-      .populate({
-        path: "teams",
-        populate: { path: "members", select: "name" },
-      });
-
-      console.log(sports)
-      console.log(matches)
-      // console.log(matches.teams[0])
-      // console.log(matches.playground)
-
-     console.log("!!!")
-    const data = matches.map((match) => {
-      const { address, position } = match.playground;
-      const host = match.teams[0];
-
-      return {
-        id: match._id,
-        sports,
-        type: match.match_type,
-        host: {
-          name: host.name,
-          province: host.location.province,
-          city: host.location.city,
-          district: host.location.district,
-          emblem: host.emblem,
-          members: host.members,
-          manner: host.repute.manner,
-          ability: host.repute.ability,
-        },
-        playtime: {
-          start: match.playtime.start,
-          end: match.playtime.end,
-        },
-        playground: {
-          name: match.playground.name,
-          province: address.province,
-          city: address.city,
-          district: address.district,
-          town: address.town,
-          detail: address.detail,
-          latitude: position.latitude,
-          longitude: position.longitude,
-        }
-      };
-    });
-
-    console.log(data)
+      .populate({ path:"teams", populate: { path: "location" }});
 
     res.status(200).json({
       message: "success",
-      data,
+      data: matches,
       error: null,
     });
   } catch (err) {
