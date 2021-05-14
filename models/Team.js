@@ -14,8 +14,8 @@ const teamSchema = new mongoose.Schema({
   //   district: { type: String, require: true, trim: true, match: korReg },
   // },
   repute: {
-    manner: { type: Number, required: true, min: 1, max: 5 },
-    ability: { type: Number, required: true, min: 1, max: 5 },
+    manner: { type: Number, required: true, default: 5, min: 1, max: 5 },
+    ability: { type: Number, required: true, default: 5, min: 1, max: 5 },
   },
   matches: [{ type: mongoose.Types.ObjectId, ref: "Match" }],
   emblem: { type: String },
