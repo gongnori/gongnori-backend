@@ -45,4 +45,30 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.get("/my", async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+    const user = await User.findOne({ email });
+
+    const data = user.messages;
+    console.log(data);
+
+    res.status(200).json({
+      message: "success",
+      data,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`GET : /message/my - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
 module.exports = router;

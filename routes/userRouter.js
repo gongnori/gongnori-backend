@@ -27,60 +27,60 @@ router.post("/location", async (req, res, next) => {
   }
 });
 
-router.get("/team", async (req, res, next) => {
-  try {
-    const token = req.headers.authorization;
-    const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    const user = await User.findOne({ email }).populate("teams", "_id name");
+// router.get("/team", async (req, res, next) => {
+//   try {
+//     const token = req.headers.authorization;
+//     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+//     const user = await User.findOne({ email }).populate("teams", "_id name");
 
-    const teams = user.teams.map((team) => {
-      const id = team._id;
-      const name = team.name;
+//     const teams = user.teams.map((team) => {
+//       const id = team._id;
+//       const name = team.name;
 
-      return { id, name };
-    });
+//       return { id, name };
+//     });
 
-    res.status(200).json({
-      message: "success",
-      data: teams,
-      error: null,
-    });
-  } catch (err) {
-    res.status(200).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
+//     res.status(200).json({
+//       message: "success",
+//       data: teams,
+//       error: null,
+//     });
+//   } catch (err) {
+//     res.status(200).json({
+//       message: "fail",
+//       data: null,
+//       error: "error",
+//     });
 
-    console.log(`GET : /user/team - ${err}`);
-    next(createError(500, "Internal Server Error"));
-  }
-});
+//     console.log(`GET : /user/team - ${err}`);
+//     next(createError(500, "Internal Server Error"));
+//   }
+// });
 
-router.get("/message", async (req, res, next) => {
-  try {
-    const token = req.headers.authorization;
-    const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    const user = await User.findOne({ email });
+// router.get("/message", async (req, res, next) => {
+//   try {
+//     const token = req.headers.authorization;
+//     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+//     const user = await User.findOne({ email });
 
-    const data = user.messages;
-    console.log(data);
+//     const data = user.messages;
+//     console.log(data);
 
-    res.status(200).json({
-      message: "success",
-      data,
-      error: null,
-    });
-  } catch (err) {
-    res.status(200).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
+//     res.status(200).json({
+//       message: "success",
+//       data,
+//       error: null,
+//     });
+//   } catch (err) {
+//     res.status(200).json({
+//       message: "fail",
+//       data: null,
+//       error: "error",
+//     });
 
-    console.log(`GET : /user/message - ${err}`);
-    next(createError(500, "Internal Server Error"));
-  }
-});
+//     console.log(`GET : /user/message - ${err}`);
+//     next(createError(500, "Internal Server Error"));
+//   }
+// });
 
 module.exports = router;

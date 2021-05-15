@@ -112,4 +112,34 @@ router.post("/emblem", upload.single("image"), (req, res, next) => {
   }
 });
 
+router.get("/my", async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+    const user = await User.findOne({ email }).populate("teams", "_id name");
+
+    const teams = user.teams.map((team) => {
+      const id = team._id;
+      const name = team.name;
+
+      return { id, name };
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: teams,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`GET : /team/my - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
 module.exports = router;
