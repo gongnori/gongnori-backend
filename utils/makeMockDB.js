@@ -10,7 +10,8 @@ const Playground = require("../models/Playground");
 const Team = require("../models/Team");
 const User = require("../models/User");
 const Location = require("../models/Location");
-const Sports = require("../models/Sports")
+const Sports = require("../models/Sports");
+const Message = require("../models/Message");
 
 const makeRandomNumber = require("./makeRandomNumber");
 
@@ -176,6 +177,7 @@ const makeMockDB = async (isInitial) => {
   await Sports.remove();
   await Team.remove();
   await User.remove();
+  await Message.remove();
 
   await locationsWithOid.forEach((doc) => Location.create(doc));
   await sports.forEach((doc) => Sports.create(doc));

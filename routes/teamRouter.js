@@ -5,6 +5,7 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const jwt = require("jsonwebtoken");
 
+const Location = require("../models/Location");
 const Team = require("../models/Team");
 const User = require("../models/User");
 
@@ -63,16 +64,31 @@ router.post("/", async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    const { name, location, sports } = req.body;
-
+    const { name, location, sports, imageS3 } = req.body;
     const team = await Team.findOne({ name });
 
     if (!team) {
+      const loationOid = await Location.findOne({
+        province: location.province,
+        city: location.city,
+        district: location.district,
+      }, "_id");
+
       const user = await User.findOne({ email });
-      const newTeam = await Team.create({ name, location, sports, captin: user, members: [user] });
+
+      const newTeam = await Team.create({
+        name,
+        location: loationOid,
+        sports,
+        captin:
+        user,
+        members: [user],
+        emblem: imageS3,
+      });
 
       user.teams.push(newTeam._id);
       await user.save();
+
       return res.status(200).json({
         message: "success",
         data: newTeam,

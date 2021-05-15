@@ -14,7 +14,7 @@ router.get("/", async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: { locations, sports},
+      data: { locations, sports },
       error: null,
     });
   } catch (err) {
@@ -24,7 +24,7 @@ router.get("/", async (req, res, next) => {
       error: "error",
     });
 
-    console.error(`GET : /application - ${err.messsage}`);
+    console.error(`GET : /application - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });

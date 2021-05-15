@@ -25,22 +25,23 @@ router.get("/", async (req, res, next) => {
       .populate({
         path: "teams",
         populate: { path: "members", select: "name" },
+      })
+      .populate({
+        path: "teams",
+        populate: { path: "captin", select: "name" },
       });
-      // .populate({
-      //   path: "teams",
-      //   populate: { path: "captin", select: "name email" },
-      // });
 
     const data = matches.map((match) => {
       const { address, position } = match.playground;
       const host = match.teams[0];
 
       return {
-        id: match._id,
+        id: match["_id"],
         sports,
         type: match.match_type,
         host: {
           name: host.name,
+          captin: host.captin.name,
           province: host.location.province,
           city: host.location.city,
           district: host.location.district,
@@ -62,7 +63,7 @@ router.get("/", async (req, res, next) => {
           detail: address.detail,
           latitude: position.latitude,
           longitude: position.longitude,
-        }
+        },
       };
     });
 
@@ -85,7 +86,8 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { sports, month, date, start, end, playground, type, teams} = req.body
+    const { sports, month, date, start, end, playground, type, teams } = req.body;
+
     const newMatch = await Match.create({
       sports,
       playtime: {
@@ -94,7 +96,7 @@ router.post("/", async (req, res, next) => {
       },
       playground,
       match_type: type,
-      teams,
+      teams: [teams[0].id],
     });
 
     res.status(200).json({
