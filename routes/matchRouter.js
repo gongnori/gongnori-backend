@@ -26,6 +26,10 @@ router.get("/", async (req, res, next) => {
         path: "teams",
         populate: { path: "members", select: "name" },
       });
+      // .populate({
+      //   path: "teams",
+      //   populate: { path: "captin", select: "name email" },
+      // });
 
     const data = matches.map((match) => {
       const { address, position } = match.playground;
@@ -81,7 +85,6 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    console.log(req.body)
     const { sports, month, date, start, end, playground, type, teams} = req.body
     const newMatch = await Match.create({
       sports,
@@ -93,7 +96,7 @@ router.post("/", async (req, res, next) => {
       match_type: type,
       teams,
     });
-    console.log(newMatch)
+
     res.status(200).json({
       message: "success",
       data: null,

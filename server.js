@@ -13,6 +13,7 @@ const matchRouter = require("./routes/matchRouter");
 const playgroundRouter = require("./routes/playgroundRouter");
 const teamRouter = require("./routes/teamRouter");
 const applicationRouter = require("./routes/applicationRouter");
+const messageRouter = require("./routes/messageRouter");
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -48,6 +49,7 @@ app.use("/user", userRouter);
 app.use("/match", matchRouter);
 app.use("/playground", playgroundRouter);
 app.use("/team", teamRouter);
+app.use("/message", messageRouter);
 
 app.use((err, req, res, next) => {
   if (err.status === 404) { res.status(200).end() }
