@@ -13,7 +13,23 @@ router.post("/login", async (req, res, next) => {
     if (!user) {
       user = await User.create({ name, email });
     }
-    const { locations, teams } = user;
+
+    const locations = user.locations.map((location) => {
+      return {
+        province: location.province,
+        city: location.city,
+        district: location.district,
+        latitude: location.position.latitude,
+        longitude: location.position.longitude,
+      };
+    });
+
+    const teams = user.teams.map((team) => {
+      const id = team._id;
+      const name = team.name;
+
+      return { id, name };
+    });
 
     const token = jwt.sign(
       { name, email },

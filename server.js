@@ -8,6 +8,7 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const indexRouter = require("./routes/indexRouter");
 const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
 const matchRouter = require("./routes/matchRouter");
 const playgroundRouter = require("./routes/playgroundRouter");
 const teamRouter = require("./routes/teamRouter");
@@ -43,6 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/application", applicationRouter);
+app.use("/user", userRouter);
 app.use("/match", matchRouter);
 app.use("/playground", playgroundRouter);
 app.use("/team", teamRouter);

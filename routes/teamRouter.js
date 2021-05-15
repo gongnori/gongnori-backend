@@ -54,7 +54,7 @@ router.get("/my-team/:myTeamId", async (req, res, next) => {
       error: "error",
     });
 
-    console.log(`GET : /team/my-team/:myTeamId - ${err.messsage}`);
+    console.log(`GET : /team/my-team/:myTeamId - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });
@@ -70,7 +70,7 @@ router.post("/", async (req, res, next) => {
     if (!team) {
       const user = await User.findOne({ email });
       const newTeam = await Team.create({ name, location, sports, captin: user, members: [user] });
-      console.log(user.teams)
+
       user.teams.push(newTeam._id);
       await user.save();
       return res.status(200).json({

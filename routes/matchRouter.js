@@ -27,12 +27,6 @@ router.get("/", async (req, res, next) => {
         populate: { path: "members", select: "name" },
       });
 
-      console.log(sports)
-      console.log(matches)
-      // console.log(matches.teams[0])
-      // console.log(matches.playground)
-
-     console.log("!!!")
     const data = matches.map((match) => {
       const { address, position } = match.playground;
       const host = match.teams[0];
@@ -67,8 +61,6 @@ router.get("/", async (req, res, next) => {
         }
       };
     });
-
-    console.log(data)
 
     res.status(200).json({
       message: "success",
