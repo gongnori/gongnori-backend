@@ -3,33 +3,21 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/User");
+const { getMyLocations, getMyTeams } = require("../models/controllers/userController")
 require("dotenv").config();
 
 router.post("/login", async (req, res, next) => {
   try {
     const { name, email } = req.body;
-    let user = await User.findOne({ email }).populate("teams", "_id name").populate("locations");
+    let user = await User.findOne({ email })
+      .populate("locations");
 
     if (!user) {
       user = await User.create({ name, email });
     }
 
-    const locations = user.locations.map((location) => {
-      return {
-        province: location.province,
-        city: location.city,
-        district: location.district,
-        latitude: location.position.latitude,
-        longitude: location.position.longitude,
-      };
-    });
-
-    const teams = user.teams.map((team) => {
-      const id = team._id;
-      const name = team.name;
-
-      return { id, name };
-    });
+    const locations = await getMyLocations(email);
+    const teams = await getMyTeams(email);
 
     const token = jwt.sign(
       { name, email },
