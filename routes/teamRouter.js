@@ -37,38 +37,39 @@ const upload = multer({
   }),
 });
 
-router.get("/my-team/:myTeamId", async (req, res, next) => {
-  try {
-    const { myTeamId } = req.params;
-    const team = await Team.findById({_id: myTeamId })
-      .populate("captin", "name email")
-      .populate("members", "name email")
-      .populate("location")
-      .populate({ path: "matches", populate: { path: "teams", select: "name" } })
-      .populate({ path: "matches", populate: { path: "playground", select: "name address" }});
+// router.get("/my-team/:myTeamId", async (req, res, next) => {
+//   try {
+//     const { myTeamId } = req.params;
+//     const team = await Team.findById({_id: myTeamId })
+//       .populate("captin", "name email")
+//       .populate("members", "name email")
+//       .populate("location")
+//       .populate({ path: "matches", populate: { path: "teams", select: "name" } })
+//       .populate({ path: "matches", populate: { path: "playground", select: "name address" }});
 
-    res.status(200).json({
-      message: "success",
-      data: team,
-      error: null,
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
+//     res.status(200).json({
+//       message: "success",
+//       data: team,
+//       error: null,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "fail",
+//       data: null,
+//       error: "error",
+//     });
 
-    console.log(`GET : /team/my-team/:myTeamId - ${err}`);
-    next(createError(500, "Internal Server Error"));
-  }
-});
+//     console.log(`GET : /team/my-team/:myTeamId - ${err}`);
+//     next(createError(500, "Internal Server Error"));
+//   }
+// });
 
 router.post("/", async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
     const { name, location, sports, imageS3 } = req.body;
+
     const team = await Team.findOne({ name });
 
     if (team) {
@@ -78,6 +79,7 @@ router.post("/", async (req, res, next) => {
         error: null,
       });
     }
+
     await createTeam(email, name, sports, location, imageS3);
 
     res.status(200).json({

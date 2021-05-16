@@ -31,12 +31,15 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async (data) => {
       const message = await Message.findById(messageId);
-      console.log(message.chats)
       message.chats.push(data);
       await message.save();
 
-      io.in(messageId).emit("send-message", message);
+      io.in(messageId).emit("send-message", message.chats);
     });
+  });
+
+  socket.on("leave-chat-room", async (messageId) => {
+    socket.leave(messageId);
   });
 });
 

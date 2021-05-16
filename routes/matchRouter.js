@@ -111,4 +111,27 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.patch("/", async (req, res, next) => {
+  console.log("!!!")
+  try {
+    // const { sports, month, date, start, end, playground, type, team } = req.body;
+
+
+    res.status(200).json({
+      message: "success",
+      data: null,
+      error: null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`POST : /match - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
 module.exports = router;
