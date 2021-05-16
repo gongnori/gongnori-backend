@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // const korReg = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
 
 const teamSchema = new mongoose.Schema({
-  sports: { type: String, require: true, lowercase: true },
+  sports: { type: mongoose.Types.ObjectId, ref: "Sports" },
   name: { type: String, require: true, lowercase: true },
   captin: { type: mongoose.Types.ObjectId, ref: "User" },
   members: [{ type: mongoose.Types.ObjectId, ref: "User" }],

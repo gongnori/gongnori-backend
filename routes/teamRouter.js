@@ -8,6 +8,10 @@ const jwt = require("jsonwebtoken");
 const Location = require("../models/Location");
 const Team = require("../models/Team");
 const User = require("../models/User");
+const Sports = require("../models/Sports");
+
+const { createTeam } = require("../models/controllers/teamController");
+const { getMyTeams } = require("../models/controllers/userController");
 
 require("dotenv").config();
 
@@ -67,34 +71,21 @@ router.post("/", async (req, res, next) => {
     const { name, location, sports, imageS3 } = req.body;
     const team = await Team.findOne({ name });
 
-    if (!team) {
-      const loationOid = await Location.findOne({
-        province: location.province,
-        city: location.city,
-        district: location.district,
-      }, "_id");
-
-      const user = await User.findOne({ email });
-
-      const newTeam = await Team.create({
-        name,
-        location: loationOid,
-        sports,
-        captin:
-        user,
-        members: [user],
-        emblem: imageS3,
-      });
-
-      user.teams.push(newTeam._id);
-      await user.save();
-
+    if (team) {
       return res.status(200).json({
-        message: "success",
-        data: newTeam,
+        message: "team exist",
+        data: null,
         error: null,
       });
     }
+
+    await createTeam(email, name, sports, location, imageS3);
+
+    res.status(200).json({
+      message: "success",
+      data: null,
+      error: null,
+    });
   } catch (err) {
     res.status(500).json({
       message: "fail",
@@ -132,14 +123,8 @@ router.get("/my", async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    const user = await User.findOne({ email }).populate("teams", "_id name");
 
-    const teams = user.teams.map((team) => {
-      const id = team._id;
-      const name = team.name;
-
-      return { id, name };
-    });
+    const teams = await getMyTeams(email);
 
     res.status(200).json({
       message: "success",
