@@ -3,7 +3,9 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/User");
-const { getMyLocations, getMyTeams, saveMyLocations } = require("../models/controllers/userController")
+const { getMyLocations, getMyTeams, saveMyLocations } = require("../models/controllers/userController");
+const { getAppSports } = require("../models/controllers/sportsController");
+
 require("dotenv").config();
 
 router.post("/login", async (req, res, next) => {
@@ -17,6 +19,7 @@ router.post("/login", async (req, res, next) => {
     }
 
     const locations = await getMyLocations(email);
+    const sports = await getAppSports();
     const teams = await getMyTeams(email);
 
     const token = jwt.sign(
@@ -27,7 +30,7 @@ router.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: { token, locations, teams },
+      data: { token, locations, teams, sports },
       error: null,
     });
   } catch (err) {

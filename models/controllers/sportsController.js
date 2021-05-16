@@ -10,7 +10,7 @@ const getAppSports = async () => {
       id: item["_id"],
       sports: item.sports,
       koreanName: item["korean_name"],
-      matchTypes: item["match_type"],
+      matchTypes: item["match_types"],
     };
   });
 };
