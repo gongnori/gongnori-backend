@@ -1,20 +1,21 @@
 const express = require("express");
 const createError = require("http-errors");
 const router = express.Router();
-const Location = require("../models/Location");
-const Sports = require("../models/Sports");
-// const Message = require("../models/Message");
+const { getAppLocations } = require("../models/controllers/locationController");
+const { getAppSports } = require("../models/controllers/sportsController");
+const { getAppPlaygrounds } = require("../models/controllers/playgroundController");
 
 require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
   try {
-    const locations = await Location.find();
-    const sports = await Sports.find();
+    const locations = await getAppLocations();
+    const sports = await getAppSports();
+    const playgrounds = await getAppPlaygrounds();
 
     res.status(200).json({
       message: "success",
-      data: { locations, sports },
+      data: { locations, sports, playgrounds },
       error: null,
     });
   } catch (err) {

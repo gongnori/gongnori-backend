@@ -1,3 +1,4 @@
+const Location = require("../Location");
 const User = require("../User");
 
 const getMyTeams = async (email) => {
@@ -11,6 +12,7 @@ const getMyTeams = async (email) => {
 
   const teams = user.teams.map((team) => {
     return {
+      id: team["_id"],
       name: team.name,
       captin: team.captin.name,
       province: team.location.province,
@@ -34,6 +36,7 @@ const getMyLocations = async (email) => {
 
   const locations = user.locations.map((location) => {
     return {
+      id: location["_id"],
       province: location.province,
       city: location.city,
       district: location.district,
@@ -45,4 +48,17 @@ const getMyLocations = async (email) => {
   return locations;
 };
 
-module.exports = { getMyTeams, getMyLocations };
+const saveMyLocations = async (email, locations) => {
+  const locationsOids = [];
+
+  for (let i = 0; i < locations.length; i++) {
+    const { province, city, district } =  locations[i];
+    const locationOid = await Location.findOne({ province, city, district }, "_id");
+
+    locationsOids.push(locationOid);
+  }
+
+  await User.findOneAndUpdate({ email }, { locations: locationsOids });
+};
+
+module.exports = { getMyTeams, getMyLocations, saveMyLocations };
