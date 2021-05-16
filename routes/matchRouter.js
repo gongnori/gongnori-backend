@@ -1,8 +1,12 @@
 const express = require("express");
 const createError = require("http-errors");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Match = require("../models/Match");
 const Sports = require("../models/Sports");
+const Team = require("../models/Team");
+const Playground = require("../models/Playground");
+const { createMatch } = require("../models/controllers/matchController")
 require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
@@ -86,18 +90,9 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { sports, month, date, start, end, playground, type, teams } = req.body;
+    const { sports, month, date, start, end, playground, type, team } = req.body;
 
-    const newMatch = await Match.create({
-      sports,
-      playtime: {
-        start: new Date(new Date().getFullYear(), month - 1, date, start),
-        end: new Date(new Date().getFullYear(), month - 1, date, end),
-      },
-      playground,
-      match_type: type,
-      teams: [teams[0].id],
-    });
+    await createMatch(sports, month, date, start, end, playground, type, team);
 
     res.status(200).json({
       message: "success",

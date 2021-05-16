@@ -78,7 +78,6 @@ router.post("/", async (req, res, next) => {
         error: null,
       });
     }
-
     await createTeam(email, name, sports, location, imageS3);
 
     res.status(200).json({
