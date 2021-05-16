@@ -6,7 +6,8 @@ const Match = require("../models/Match");
 const Sports = require("../models/Sports");
 const Team = require("../models/Team");
 const Playground = require("../models/Playground");
-const { createMatch } = require("../models/controllers/matchController")
+const { createMatch } = require("../models/controllers/matchController");
+const User = require("../models/User");
 require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
@@ -112,9 +113,23 @@ router.post("/", async (req, res, next) => {
 });
 
 router.patch("/", async (req, res, next) => {
-  console.log("!!!")
+  console.log(req.body)
+
+
   try {
     // const { sports, month, date, start, end, playground, type, team } = req.body;
+
+    const { matchId, host, guest } = req.body
+
+    const guestTeam = await Team.findOne({ name: guest.team });
+    const guestTeamOid = guestTeam["_id"];
+
+    const match = await Match.findById(matchId);
+    match.teams.push(guestTeamOid);
+    await match.save();
+
+    guestTeam.matches.push(matchId);
+    await guestTeam.save();
 
 
     res.status(200).json({
