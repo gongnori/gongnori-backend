@@ -93,7 +93,7 @@ router.get("/my", async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: [1],
+      data,
       error: null,
     });
   } catch (err) {

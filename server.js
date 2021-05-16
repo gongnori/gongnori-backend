@@ -4,6 +4,8 @@ const http = require("http");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const path = require("path");
+const socketIo = require("socket.io");
+const Message = require("./models/Message");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const indexRouter = require("./routes/indexRouter");
@@ -18,6 +20,25 @@ const messageRouter = require("./routes/messageRouter");
 const app = express();
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
+
+const io = socketIo(server);
+
+io.on("connection", (socket) => {
+  socket.on("join-chat-room", async (messageId) => {
+    socket.join(messageId);
+    const message = await Message.findById(messageId);
+    socket.emit("load-message", message.chats);
+
+    socket.on("send-message", async (data) => {
+      const message = await Message.findById(messageId);
+      console.log(message.chats)
+      message.chats.push(data);
+      await message.save();
+
+      io.in(messageId).emit("send-message", message);
+    });
+  });
+});
 
 server.listen(port, () => console.log(`server connection: port ${port}`));
 
