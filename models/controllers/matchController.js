@@ -12,7 +12,7 @@ const createMatch = async (
   end,
   playground,
   type,
-  team
+  team,
 ) => {
   const _team = await Team.findById(team.id, "matches");
 
