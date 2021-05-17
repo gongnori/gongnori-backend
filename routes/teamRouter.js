@@ -10,7 +10,7 @@ const Team = require("../models/Team");
 const User = require("../models/User");
 const Sports = require("../models/Sports");
 
-const { createTeam } = require("../models/controllers/teamController");
+const { createTeam, registerUser } = require("../models/controllers/teamController");
 const { getMyTeams } = require("../models/controllers/userController");
 
 require("dotenv").config();
@@ -130,6 +130,36 @@ router.get("/my", async (req, res, next) => {
     res.status(200).json({
       message: "success",
       data: teams,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`GET : /team/my - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
+router.patch("/members", async (req, res, next) => {
+  try {
+    const { email, teamId } = req.body;
+    const result = await registerUser(email, teamId);
+
+    if (result === "invalid user") {
+      res.status(200).json({
+        message: "invalid user",
+        data: null,
+        error: null,
+      });
+    }
+
+    res.status(200).json({
+      message: "success",
+      data: null,
       error: null,
     });
   } catch (err) {
