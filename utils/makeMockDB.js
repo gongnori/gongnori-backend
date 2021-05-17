@@ -16,6 +16,7 @@ const Message = require("../models/Message");
 const makeRandomNumber = require("./makeRandomNumber");
 
 const koreanNames = require("../models/koreanName.json");
+const koreanSurNames = require("../models/koreanSurName.json");
 const locations = require("../models/location.json");
 const playgrounds = require("../models/playground.json");
 const emblems = require("../models/emblems.json");
@@ -23,7 +24,7 @@ const sports = require("../models/sports.json");
 
 const makeMock = () => {
   const memberNum = 10;
-  const teamNum = 10;
+  const teamNum = 30;
   const matchNum = 5;
 
   const teams = [];
@@ -44,18 +45,27 @@ const makeMock = () => {
     return playground;
   });
 
+  const sportsWithOid = sports.map((item) => {
+    const itemOid = mongoose.Types.ObjectId();
+    item._id = itemOid;
+
+    return item;
+  });
+  console.log(sportsWithOid)
+
   for (let i = 0; i < teamNum; i++) {
     const teamOid = mongoose.Types.ObjectId();
     const randomLocationIdx = makeRandomNumber(0, 9);
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
     const randomTeamNameIdx = makeRandomNumber(0, 199);
+    const randomSportsIdx = makeRandomNumber(0, 2);
     const randomEmblemIdx = makeRandomNumber(0, emblems.length - 1);
 
     const team = {
       _id: teamOid,
-      name: `FC${koreanNames[randomTeamNameIdx]}`,
-      sports: "football",
+      name: `${koreanNames[i]}팀`,
+      sports: sportsWithOid[randomSportsIdx],
       members: [],
       captin: null,
       location: locationsWithOid[randomLocationIdx],
@@ -78,7 +88,8 @@ const makeMock = () => {
       });
 
       const randomUserNameIdx = makeRandomNumber(0, koreanNames.length - 1);
-      const userName = koreanNames[randomUserNameIdx];
+      const randomUserSurNameIdx = makeRandomNumber(0, koreanSurNames.length - 1);
+      const userName = `${koreanSurNames[randomUserSurNameIdx]}${koreanNames[randomUserNameIdx]}`;
 
       const randomLocationIdx = makeRandomNumber(0, locations.length - 2);
       const userLocations = [
@@ -113,14 +124,14 @@ const makeMock = () => {
 
       const match = {
         _id: matchOid,
-        sports: "football",
+        sports: sportsWithOid[randomSportsIdx],
         created_at: Date.now(),
         playtime: {
           start,
           end,
         },
         playground: playgroundsWithOid[randomPlaygroundIdx]._id,
-        match_type: "5:5",
+        match_type: sports[randomSportsIdx]["match_types"][1],
         teams: [teamOid],
       };
 

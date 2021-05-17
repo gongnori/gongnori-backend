@@ -5,6 +5,7 @@ const router = express.Router();
 const Match = require("../models/Match");
 const Sports = require("../models/Sports");
 const Team = require("../models/Team");
+const Location = require("../models/Location");
 const Playground = require("../models/Playground");
 const { createMatch } = require("../models/controllers/matchController");
 const User = require("../models/User");
@@ -12,17 +13,31 @@ require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
   try {
-    const { location, sports, year, month, date } = req.query;
+    const { province, city, district, sports, year, month, date } = req.query;
+// console.log(sports);
+console.log(province, city, district)
 
     const thresMin = new Date(year, (parseInt(month, 10) - 1).toString(), date);
     const thresMax = new Date(year, (parseInt(month, 10) - 1).toString(), (parseInt(date, 10) + 1));
+    const _sports = await Sports.findOne({ sports }, "_id");
+    const sportsOid = _sports["_id"];
 
-    const sportsOid = await Sports.find({ sports }, "_id");
+    const location = await Location.find({
+      province,
+      city,
+      district,
+    })
+
+    const locationOid =location["_id"];
 
     const matches = await Match.find({ //지역에 따라 query하는 법 찾아보자...
       sports: sportsOid,
       "playtime.start": { $gte: thresMin, $lte: thresMax },
-    }).populate("playground")
+      // playground,
+    }).populate({
+      path: "playground",
+      populate: { path: "address" },
+    })
       .populate({
         path: "teams",
         populate: { path: "location" },
@@ -35,7 +50,7 @@ router.get("/", async (req, res, next) => {
         path: "teams",
         populate: { path: "captin", select: "name" },
       });
-
+// console.log(matches)
     const data = matches.map((match) => {
       const { address, position } = match.playground;
       const host = match.teams[0];
@@ -60,6 +75,7 @@ router.get("/", async (req, res, next) => {
           end: match.playtime.end,
         },
         playground: {
+          //id주기
           name: match.playground.name,
           province: address.province,
           city: address.city,
@@ -92,7 +108,6 @@ router.get("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { sports, month, date, start, end, playground, type, team } = req.body;
-
     await createMatch(sports, month, date, start, end, playground, type, team);
 
     res.status(200).json({
@@ -113,12 +128,7 @@ router.post("/", async (req, res, next) => {
 });
 
 router.patch("/", async (req, res, next) => {
-  console.log(req.body)
-
-
   try {
-    // const { sports, month, date, start, end, playground, type, team } = req.body;
-
     const { matchId, host, guest } = req.body
 
     const guestTeam = await Team.findOne({ name: guest.team });
@@ -130,7 +140,6 @@ router.patch("/", async (req, res, next) => {
 
     guestTeam.matches.push(matchId);
     await guestTeam.save();
-
 
     res.status(200).json({
       message: "success",
@@ -144,7 +153,7 @@ router.patch("/", async (req, res, next) => {
       error: "error",
     });
 
-    console.log(`POST : /match - ${err}`);
+    console.log(`PATCH : /match - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });

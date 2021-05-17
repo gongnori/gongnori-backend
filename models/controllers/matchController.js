@@ -14,24 +14,17 @@ const createMatch = async (
   type,
   team
 ) => {
-  const _sports = await Sports.findOne({sports: sports.sports} , "_id");
-  const sportsOid = _sports["_id"];
-
-  const _playground = await Playground.findOne({name: playground.name} , "_id");
-  const playgroundOid = _playground["_id"];
-
-  const _team = await Team.findOne({ name: team.name }, "_id matches");
-  const teamOid = _team["_id"];
+  const _team = await Team.findById(team.id, "matches");
 
   const match = await Match.create({
-    sports: sportsOid,
+    sports: sports.id,
     playtime: {
       start: new Date(new Date().getFullYear(), month - 1, date, start),
       end: new Date(new Date().getFullYear(), month - 1, date, end),
     },
-    playground: playgroundOid,
+    playground: playground.id,
     match_type: type,
-    teams: [teamOid],
+    teams: [team.id],
   });
 
   _team.matches.push(match["_id"]);
