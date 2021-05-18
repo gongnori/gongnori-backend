@@ -35,6 +35,7 @@
     "no-warning-comments": ["warn", { "terms": [""], "location": "anywhere" }],
     "arrow-body-style": "off",
     "object-shorthand": "off",
-    "dot-notation": "off"
+    "dot-notation": "off",
+    "no-return-await": "off",
   }
 }
