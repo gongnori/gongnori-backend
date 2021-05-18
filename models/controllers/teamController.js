@@ -18,4 +18,22 @@ const createTeam = async (email, name, sports, location, imageS3) => {
   await _user.save();
 };
 
-module.exports = { createTeam };
+const registerUser = async () => {
+  const [user, team] = await Promise.all([User.findOne({ email }), Team.findById(teamId)]);
+
+  if (!user) { return "invalid user" }
+
+  const isTeamMember = team.members.some((member) => member === user["_id"]);
+  const isMyTeam = user.teams.some((team) => team === team["_id"]);
+
+  if (!isTeamMember && !isMyTeam) {
+    team.members.push(user);
+    user.teams.push(team);
+
+    await Promise.all([team.save(), user.save()]);
+  }
+
+  return "register user";
+};
+
+module.exports = { createTeam, registerUser };

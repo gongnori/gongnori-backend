@@ -19,6 +19,7 @@ const messageSchema = new mongoose.Schema({
     content: { type: String },
     date: { type: Date, default: Date.now()}
   }],
+  rank: { type: Number },
 });
 
 module.exports = mongoose.model("Message", messageSchema);

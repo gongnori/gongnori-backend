@@ -13,7 +13,7 @@ router.post("/", async (req, res, next) => {
     const token = req.headers.authorization;
     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
     const { match, team } = req.body;
-console.log(team)
+
     const user = await User.findOne({ email }).populate("messages");
 
     const hasMessage = user.messages.some((message) => {

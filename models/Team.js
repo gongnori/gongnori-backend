@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-// const korReg = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
-
 const teamSchema = new mongoose.Schema({
   sports: { type: mongoose.Types.ObjectId, ref: "Sports" },
   name: { type: String, require: true, lowercase: true },
@@ -14,6 +12,7 @@ const teamSchema = new mongoose.Schema({
   },
   matches: [{ type: mongoose.Types.ObjectId, ref: "Match" }],
   emblem: { type: String },
+  rank: { type: Number },
 });
 
 module.exports = mongoose.model("Team", teamSchema);

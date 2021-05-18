@@ -51,16 +51,16 @@ const makeMock = () => {
 
     return item;
   });
-  console.log(sportsWithOid)
 
   for (let i = 0; i < teamNum; i++) {
     const teamOid = mongoose.Types.ObjectId();
-    const randomLocationIdx = makeRandomNumber(0, 9);
+    const randomLocationIdx = makeRandomNumber(0, 1);
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
     const randomTeamNameIdx = makeRandomNumber(0, 199);
     const randomSportsIdx = makeRandomNumber(0, 2);
     const randomEmblemIdx = makeRandomNumber(0, emblems.length - 1);
+    const randomRankPoint = makeRandomNumber(800, 1200);
 
     const team = {
       _id: teamOid,
@@ -75,6 +75,7 @@ const makeMock = () => {
       },
       matches: [],
       emblem: emblems[randomEmblemIdx],
+      rank: randomRankPoint,
     };
 
     for (let j = 0; j < memberNum; j++) {
@@ -133,6 +134,7 @@ const makeMock = () => {
         playground: playgroundsWithOid[randomPlaygroundIdx]._id,
         match_type: sports[randomSportsIdx]["match_types"][1],
         teams: [teamOid],
+        rank: [true, false][makeRandomNumber(0, 1)],
       };
 
       matches.push(match);

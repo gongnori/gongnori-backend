@@ -10,6 +10,8 @@ const matchSchema = new mongoose.Schema({
   playground: { type: mongoose.Types.ObjectId, ref: "Playground" },
   match_type: { type: String, require: true, lowercase: true },
   teams: [{ type: mongoose.Types.ObjectId, ref: "Team" }],
+  // location: { type: mongoose.Types.ObjectId, ref: "Team" },
+  rank: { type: Boolean },
 });
 
 module.exports = mongoose.model("Match", matchSchema);

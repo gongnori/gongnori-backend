@@ -169,7 +169,78 @@ router.patch("/members", async (req, res, next) => {
       error: "error",
     });
 
-    console.log(`GET : /team/my - ${err}`);
+    console.log(`PATCH : /team/members - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
+router.get("/", async (req, res, next) => {
+  try {
+    const { province, city, district, sports } = req.query;
+
+    const [location, _sports] = await Promise.all([
+      await Location.findOne({ province, city, district }),
+      await Sports.findOne({ sports }),
+    ]);
+
+    const locationOid = location["_id"];
+    const sportsOid = _sports["_id"];
+
+    const teams = await Team.find({
+      $and: [{ location: locationOid }, { sports: sportsOid }]
+    }).populate("location")
+      .populate("caption")
+      .populate("sports")
+      .populate("members")
+      .populate({ path: "matches", populate: { path: "playground" } })
+      .populate({ path: "matches", populate: { path: "teams" } });
+
+    const _teams = teams.map((team) => {
+      const matches = team.matches.map((match) => {
+        const { playtime, playground } = match;
+
+        return {
+          start: playtime.start,
+          end: playtime.end,
+          playgroundName: playground.name,
+          province: playground.address.province,
+          city: playground.address.city,
+          district: playground.address.district,
+          teams: match.teams[1]
+            ? [match.teams[0].name, match.teams[1].name]
+            : [match.teams[0].name],
+        };
+      });
+
+      return {
+        id: team["_id"],
+        name: team.name,
+        captin: team.captin.name,
+        province: team.location.province,
+        city: team.location.city,
+        district: team.location.district,
+        emblem: team.emblem,
+        members: team.members,
+        manner: team.repute.manner,
+        ability: team.repute.ability,
+        matches: matches,
+        rank: team.rank,
+      };
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: _teams,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`GET : /team - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });

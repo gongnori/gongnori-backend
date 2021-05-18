@@ -41,6 +41,7 @@ const getMyTeams = async (email) => {
       manner: team.repute.manner,
       ability: team.repute.ability,
       matches: matches,
+      rank: team.rank,
     };
   });
 

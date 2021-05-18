@@ -50,8 +50,15 @@ console.log(province, city, district)
         path: "teams",
         populate: { path: "captin", select: "name" },
       });
-// console.log(matches)
-    const data = matches.map((match) => {
+
+    const _matches = matches.filter((match) => {
+      const { address } = match.playground;
+      return address.province === province
+        && address.city === city
+        && address.district === district;
+    })
+
+    const data = _matches.map((match) => {
       const { address, position } = match.playground;
       const host = match.teams[0];
 
@@ -108,6 +115,7 @@ console.log(province, city, district)
 router.post("/", async (req, res, next) => {
   try {
     const { sports, month, date, start, end, playground, type, team } = req.body;
+
     await createMatch(sports, month, date, start, end, playground, type, team);
 
     res.status(200).json({
@@ -126,6 +134,28 @@ router.post("/", async (req, res, next) => {
     next(createError(500, "Internal Server Error"));
   }
 });
+
+// router.post("/random-match", async (req, res, next) => {
+//   try {
+//     const { sports, month, date, start, end, playground, type, team } = req.body;
+//     await createMatch(sports, month, date, start, end, playground, type, team);
+
+//     res.status(200).json({
+//       message: "success",
+//       data: null,
+//       error: null,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "fail",
+//       data: null,
+//       error: "error",
+//     });
+
+//     console.log(`POST : /match/random-match - ${err}`);
+//     next(createError(500, "Internal Server Error"));
+//   }
+// });
 
 router.patch("/", async (req, res, next) => {
   try {
