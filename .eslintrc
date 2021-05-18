@@ -34,6 +34,7 @@
     "import/newline-after-import": "off",
     "no-warning-comments": ["warn", { "terms": [""], "location": "anywhere" }],
     "arrow-body-style": "off",
-    "object-shorthand": "off"
+    "object-shorthand": "off",
+    "dot-notation": "off"
   }
 }

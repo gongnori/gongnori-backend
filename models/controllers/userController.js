@@ -17,6 +17,7 @@ const getMyTeams = async (email) => {
       const { playtime, playground } = match;
 
       return {
+        id: match["_id"],
         start: playtime.start,
         end: playtime.end,
         playgroundName: playground.name,
