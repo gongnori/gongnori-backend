@@ -53,8 +53,16 @@ router.get("/my", async (req, res, next) => {
 
       return {
         id: message["_id"],
-        host: { captin: message.host.captin.name, team: message.host.team.name},
-        guest: { captin: message.guest.captin.name, team: message.guest.team.name},
+        host: {
+          captin: message.host.captin.name,
+          team: message.host.team.name,
+          teamId: message.host.team["_id"],
+        },
+        guest: {
+          captin: message.guest.captin.name,
+          team: message.guest.team.name,
+          teamId: message.guest.team["_id"],
+        },
         matchId: match["_id"],
         sports: match.sports["korean_name"],
         type: match.match_type,

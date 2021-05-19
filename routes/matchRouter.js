@@ -81,7 +81,7 @@ router.post("/rank", async (req, res, next) => {
 
 router.patch("/", async (req, res, next) => {
   try {
-    const { matchId, host, guest } = req.body
+    const { matchId, guest } = req.body;
 
     const guestTeam = await Team.findOne({ name: guest.team });
     const guestTeamOid = guestTeam["_id"];

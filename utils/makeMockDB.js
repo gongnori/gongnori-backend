@@ -75,7 +75,7 @@ const makeMock = () => {
       },
       matches: [],
       emblem: emblems[randomEmblemIdx],
-      is_rank: randomRankPoint,
+      rank: randomRankPoint,
     };
 
     for (let j = 0; j < memberNum; j++) {

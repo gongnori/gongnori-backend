@@ -167,4 +167,63 @@ router.patch("/members", async (req, res, next) => {
   }
 });
 
+router.patch("/rank", async (req, res, next) => {
+  try {
+    const { matchResult, manner, myTeamId, yourTeamId } = req.body;
+
+    const [myTeam, yourTeam] = await Promise.all([
+      await Team.findById(myTeamId),
+      await Team.findById(yourTeamId),
+    ]);
+
+    const myRankDifference = myTeam.rank - yourTeam.rank;
+    const yourRankDifference = -myTeam.rank + yourTeam.rank;
+
+    const myExpectedResult = 1 / (1 + 10 ** (-myRankDifference / 600));
+    const yourExpectedResult = 1 / (1 + 10 ** (-yourRankDifference / 600));
+
+    let myResult = 0;
+    let yourResult = 0;
+
+    if (matchResult === "승리") {
+      myResult = 1;
+      yourResult = 0;
+    } else if (matchResult === "패배") {
+      myResult = 0;
+      yourResult = 1;
+    } else if (matchResult === "무승부") {
+      myResult = 0.5;
+      yourResult = 0.5;
+    }
+
+    const SCORE_FACTOR = 10;
+    const myPoint = SCORE_FACTOR * (myResult - Math.round(100 * myExpectedResult) / 100);
+    const yourPoint = SCORE_FACTOR * (yourResult - Math.round(100 * yourExpectedResult) / 100);
+
+    await Promise.all([
+      await Team.findByIdAndUpdate(myTeamId, {
+        rank: myTeam.rank + myPoint,
+      }),
+      await Team.findByIdAndUpdate(yourTeamId, {
+        rank: yourTeam.rank + yourPoint,
+      }),
+    ]);
+
+    res.status(200).json({
+      message: "success",
+      data: null,
+      error: null,
+    });
+  } catch (err) {
+    res.status(200).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`PATCH : /team/rank - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
+
 module.exports = router;
