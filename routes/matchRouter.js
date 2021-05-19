@@ -19,12 +19,6 @@ router.get("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.log(`GET : /match/query - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
@@ -42,12 +36,6 @@ router.post("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.log(`POST : /match - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
@@ -68,12 +56,6 @@ router.post("/rank", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.log(`POST : /match/rank - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
@@ -99,12 +81,6 @@ router.patch("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.log(`PATCH : /match - ${err}`);
     next(createError(500, "Internal Server Error"));
   }

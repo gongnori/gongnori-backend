@@ -34,12 +34,6 @@ router.post("/login", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(200).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.log(`POST : /auth/login - ${err.message}`);
     next(createError(500, "Internal Server Error"));
   }
