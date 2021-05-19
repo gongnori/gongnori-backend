@@ -75,7 +75,7 @@ app.use("/team", teamRouter);
 app.use((err, req, res, next) => {
   res.status = err.status || 500;
 
-  res.send({
+  res.json({
     message: "server error",
     data: null,
     error: "error",
