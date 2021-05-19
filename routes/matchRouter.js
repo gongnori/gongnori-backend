@@ -3,101 +3,19 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Match = require("../models/Match");
-const Sports = require("../models/Sports");
 const Team = require("../models/Team");
-const Location = require("../models/Location");
-const Playground = require("../models/Playground");
-const { createMatch, createRankMatch } = require("../models/controllers/matchController");
-const User = require("../models/User");
+const { createMatch, createRankMatch, getMatches } = require("../models/controllers/matchController");
 require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
   try {
-    const { province, city, district, sports, year, month, date } = req.query;
-// console.log(sports);
-console.log(province, city, district)
+    const input = req.query;
 
-    const thresMin = new Date(year, (parseInt(month, 10) - 1).toString(), date);
-    const thresMax = new Date(year, (parseInt(month, 10) - 1).toString(), (parseInt(date, 10) + 1));
-    const _sports = await Sports.findOne({ sports }, "_id");
-    const sportsOid = _sports["_id"];
-
-    const location = await Location.find({
-      province,
-      city,
-      district,
-    })
-
-    const locationOid =location["_id"];
-
-    const matches = await Match.find({ //지역에 따라 query하는 법 찾아보자...
-      sports: sportsOid,
-      "playtime.start": { $gte: thresMin, $lte: thresMax },
-      // playground,
-    }).populate({
-      path: "playground",
-      populate: { path: "address" },
-    })
-      .populate({
-        path: "teams",
-        populate: { path: "location" },
-      })
-      .populate({
-        path: "teams",
-        populate: { path: "members", select: "name" },
-      })
-      .populate({
-        path: "teams",
-        populate: { path: "captin", select: "name" },
-      });
-
-    const _matches = matches.filter((match) => {
-      const { address } = match.playground;
-      return address.province === province
-        && address.city === city
-        && address.district === district;
-    })
-
-    const data = _matches.map((match) => {
-      const { address, position } = match.playground;
-      const host = match.teams[0];
-
-      return {
-        id: match["_id"],
-        sports,
-        type: match.match_type,
-        host: {
-          name: host.name,
-          captin: host.captin.name,
-          province: host.location.province,
-          city: host.location.city,
-          district: host.location.district,
-          emblem: host.emblem,
-          members: host.members,
-          manner: host.repute.manner,
-          ability: host.repute.ability,
-        },
-        playtime: {
-          start: match.playtime.start,
-          end: match.playtime.end,
-        },
-        playground: {
-          //id주기
-          name: match.playground.name,
-          province: address.province,
-          city: address.city,
-          district: address.district,
-          town: address.town,
-          detail: address.detail,
-          latitude: position.latitude,
-          longitude: position.longitude,
-        },
-      };
-    });
+    const matches = await getMatches(input);
 
     res.status(200).json({
       message: "success",
-      data,
+      data: matches,
       error: null,
     });
   } catch (err) {
@@ -114,9 +32,9 @@ console.log(province, city, district)
 
 router.post("/", async (req, res, next) => {
   try {
-    const { sports, month, date, start, end, playground, type, team } = req.body;
+    const input = req.body;
 
-    await createMatch(sports, month, date, start, end, playground, type, team);
+    await createMatch(input);
 
     res.status(200).json({
       message: "success",
@@ -140,10 +58,9 @@ router.post("/rank", async (req, res, next) => {
     const token = req.headers.authorization;
     const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
 
-    
-    const data = req.body;
+    const input = { email, ...req.body };
 
-    await createRankMatch({ email, ...data });
+    await createRankMatch(input);
 
     res.status(200).json({
       message: "success",

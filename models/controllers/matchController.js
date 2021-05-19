@@ -1,58 +1,113 @@
-const Match = require("../Match");
-const Sports = require("../Sports");
-const User = require("../User");
 const Location = require("../Location");
+const Match = require("../Match");
 const Message = require("../Message");
-
+const Sports = require("../Sports");
 const Team = require("../Team");
-const Playground = require("../Playground");
+const User = require("../User");
+
 const makeRandomNumber = require("../../utils/makeRandomNumber");
 
-require("dotenv").config();
+const getMatches = async (input) => {
+  const { province, city, district, sports, year, month, date } = input;
+  const thresMin = new Date(year, (parseInt(month, 10) - 1).toString(), date);
+  const thresMax = new Date(year, (parseInt(month, 10) - 1).toString(), (parseInt(date, 10) + 1));
 
-const createMatch = async (
-  sports,
-  month,
-  date,
-  start,
-  end,
-  playground,
-  type,
-  team,
-) => {
-  const _team = await Team.findById(team.id, "matches"); // promise all
+  const _sports = await Sports.findOne({ sports }, "_id");
+  const sportsOid = _sports["_id"];
 
-  const match = await Match.create({
-    sports: sports.id,
-    playtime: {
-      start: new Date(new Date().getFullYear(), month - 1, date, start),
-      end: new Date(new Date().getFullYear(), month - 1, date, end),
-    },
-    playground: playground.id,
-    match_type: type,
-    teams: [team.id],
-    is_rank: false,
+  const matches = await Match.find({
+    sports: sportsOid,
+    "playtime.start": { $gte: thresMin, $lte: thresMax },
+  }).populate({
+    path: "playground",
+    populate: { path: "address" },
+  })
+    .populate({
+      path: "teams",
+      populate: { path: "location" },
+    })
+    .populate({
+      path: "teams",
+      populate: { path: "members", select: "name" },
+    })
+    .populate({
+      path: "teams",
+      populate: { path: "captin", select: "name" },
+    });
+
+  const _matches = matches.filter((match) => {
+    const { address } = match.playground;
+    return address.province === province
+      && address.city === city
+      && address.district === district;
   });
 
+  const data = _matches.map((match) => {
+    const { address, position } = match.playground;
+    const host = match.teams[0];
+
+    return {
+      id: match["_id"],
+      sports,
+      type: match.match_type,
+      host: {
+        name: host.name,
+        captin: host.captin.name,
+        province: host.location.province,
+        city: host.location.city,
+        district: host.location.district,
+        emblem: host.emblem,
+        members: host.members,
+        manner: host.repute.manner,
+        ability: host.repute.ability,
+      },
+      playtime: {
+        start: match.playtime.start,
+        end: match.playtime.end,
+      },
+      playground: {
+        id: match.playground["_id"],
+        name: match.playground.name,
+        province: address.province,
+        city: address.city,
+        district: address.district,
+        town: address.town,
+        detail: address.detail,
+        latitude: position.latitude,
+        longitude: position.longitude,
+      },
+    };
+  });
+
+  return data;
+};
+
+const createMatch = async (input) => {
+  const { sports, month, date, start, end, playground, type, team } = input;
+
+  const [_team, match] = await Promise.all([
+    await Team.findById(team.id, "matches"),
+    await Match.create({
+      sports: sports.id,
+      playtime: {
+        start: new Date(new Date().getFullYear(), month - 1, date, start),
+        end: new Date(new Date().getFullYear(), month - 1, date, end),
+      },
+      playground: playground.id,
+      match_type: type,
+      teams: [team.id],
+      is_rank: false,
+    }),
+  ]);
+
   _team.matches.push(match["_id"]);
-  _team.save();
+  await _team.save();
 
   return match;
 };
 
-const createRankMatch = async (data) => {
-  const {
-    email,
-    sports,
-    month,
-    date,
-    start,
-    end,
-    playground,
-    type,
-    team,
-  } = data;
-
+const createRankMatch = async (input) => {
+  const { email, sports, month, date, start, end, playground, type, team } = input;
   const { province, city, district } = playground;
 
   const [myTeam, match, user, location] = await Promise.all([
@@ -73,7 +128,7 @@ const createRankMatch = async (data) => {
   ]);
 
   myTeam.matches.push(match["_id"]);
-  myTeam.save();
+  await myTeam.save();
 
   const locationOid = location["_id"];
   const opponents = await Team.find({
@@ -104,4 +159,4 @@ const createRankMatch = async (data) => {
   return match;
 };
 
-module.exports = { createMatch, createRankMatch };
+module.exports = { createMatch, createRankMatch, getMatches };
