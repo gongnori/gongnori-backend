@@ -19,12 +19,6 @@ router.get("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
     console.error(`GET : /application - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
