@@ -5,8 +5,6 @@ const router = express.Router();
 
 const { createMessage, getMyMessages } = require("../models/controllers/messageController");
 
-require("dotenv").config();
-
 router.post("/", async (req, res, next) => {
   try {
     const token = req.headers.authorization;

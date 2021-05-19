@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const { saveMyLocations } = require("../models/controllers/userController");
 
-require("dotenv").config();
-
 router.post("/location", async (req, res, next) => {
   try {
     const { locations } = req.body;

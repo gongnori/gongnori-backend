@@ -5,8 +5,6 @@ const { getAppLocations } = require("../models/controllers/locationController");
 const { getAppSports } = require("../models/controllers/sportsController");
 const { getAppPlaygrounds } = require("../models/controllers/playgroundController");
 
-require("dotenv").config();
-
 router.get("/", async (req, res, next) => {
   try {
     const locations = await getAppLocations();
@@ -19,7 +17,7 @@ router.get("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    console.error(`GET : /application - ${err}`);
+    console.log(`GET : /application - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });

@@ -5,7 +5,6 @@ const router = express.Router();
 const Match = require("../models/Match");
 const Team = require("../models/Team");
 const { createMatch, createRankMatch, getMatches } = require("../models/controllers/matchController");
-require("dotenv").config();
 
 router.get("/", async (req, res, next) => {
   try {
