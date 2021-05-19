@@ -1,0 +1,54 @@
+[
+  {
+    "sports": "football",
+    "name": "탑스포츠클럽 풋살장",
+    "address": {
+      "province": "경기도",
+      "city": "용인시",
+      "district": "수지구",
+      "town": "풍덕천동",
+      "detail": "1078"
+    },
+    "contact": "031-265-5611",
+    "position": { "latitude": 37.32418, "longitude": 127.09565 }
+  },
+  {
+    "sports": "football",
+    "name": "더풋살파크",
+    "address": {
+      "province": "경기도",
+      "city": "용인시",
+      "district": "수지구",
+      "town": "풍덕천동",
+      "detail": "29-7"
+    },
+    "contact": "010-9740-9770",
+    "position": { "latitude": 37.32842, "longitude": 127.09591 }
+  },
+  {
+    "sports": "football",
+    "name": "BF축구교실",
+    "address": {
+      "province": "경기도",
+      "city": "용인시",
+      "district": "수지구",
+      "town": "신봉동",
+      "detail": "45"
+    },
+    "contact": "010-8007-3356",
+    "position": { "latitude": 37.32374, "longitude": 127.07907 }
+  },
+  {
+    "sports": "football",
+    "name": "제이제이클랜",
+    "address": {
+      "province": "경기도",
+      "city": "용인시",
+      "district": "기흥구",
+      "town": "중동",
+      "detail": "1113"
+    },
+    "contact": "031-283-0979",
+    "position": { "latitude": 37.28401, "longitude": 127.14256 }
+  }
+]
