@@ -14,12 +14,12 @@ const Sports = require("../models/Sports");
 const Team = require("../models/Team");
 const User = require("../models/User");
 
-const koreanNames = require("../models/json/koreanNameData.json");
-const koreanSurNames = require("../models/json/koreanSurNameData.json");
-const locations = require("../models/json/locationData.json");
-const playgrounds = require("../models/json/playgroundData.json");
-const emblems = require("../models/json/emblemsData.json");
-const sports = require("../models/json/sportsData.json");
+const koreanNames = require("../models/json/koreanName.json");
+const koreanSurNames = require("../models/json/koreanSurName.json");
+const locations = require("../models/json/location.json");
+const playgrounds = require("../models/json/playground.json");
+const emblems = require("../models/json/emblems.json");
+const sports = require("../models/json/sports.json");
 
 const makeRandomNumber = require("./makeRandomNumber");
 
