@@ -15,7 +15,7 @@ const getTeams = async (province, city, district, sports) => {
   const teams = await Team.find({
     $and: [{ location: locationOid }, { sports: sportsOid }],
   }).populate("location")
-    .populate("caption")
+    .populate("captin")
     .populate("sports")
     .populate("members")
     .populate({ path: "matches", populate: { path: "playground" } })
@@ -79,7 +79,7 @@ const createTeam = async (email, name, sports, location, imageS3) => {
 const registerUser = async (email, teamId) => {
   const [user, team] = await Promise.all([
     User.findOne({ email }, ""),
-    Team.findById(teamId)
+    Team.findById(teamId),
   ]);
 
   if (!user) { return }
@@ -87,6 +87,7 @@ const registerUser = async (email, teamId) => {
   const isTeamMember = team.members.some((memberOid) => {
     return memberOid.toString() === user["_id"].toString();
   });
+
   const isMyTeam = user.teams.some((teamOid) => {
     return teamOid.toString() === team["_id"].toString();
   });

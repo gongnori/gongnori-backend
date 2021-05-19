@@ -75,7 +75,7 @@ const makeMock = () => {
       },
       matches: [],
       emblem: emblems[randomEmblemIdx],
-      rank: randomRankPoint,
+      is_rank: randomRankPoint,
     };
 
     for (let j = 0; j < memberNum; j++) {
@@ -134,7 +134,7 @@ const makeMock = () => {
         playground: playgroundsWithOid[randomPlaygroundIdx]._id,
         match_type: sports[randomSportsIdx]["match_types"][1],
         teams: [teamOid],
-        rank: [true, false][makeRandomNumber(0, 1)],
+        is_rank: [true, false][makeRandomNumber(0, 1)],
       };
 
       matches.push(match);

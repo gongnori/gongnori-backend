@@ -7,7 +7,7 @@ const Sports = require("../models/Sports");
 const Team = require("../models/Team");
 const Location = require("../models/Location");
 const Playground = require("../models/Playground");
-const { createMatch } = require("../models/controllers/matchController");
+const { createMatch, createRankMatch } = require("../models/controllers/matchController");
 const User = require("../models/User");
 require("dotenv").config();
 
@@ -135,27 +135,32 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// router.post("/random-match", async (req, res, next) => {
-//   try {
-//     const { sports, month, date, start, end, playground, type, team } = req.body;
-//     await createMatch(sports, month, date, start, end, playground, type, team);
+router.post("/rank", async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const { email } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
 
-//     res.status(200).json({
-//       message: "success",
-//       data: null,
-//       error: null,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "fail",
-//       data: null,
-//       error: "error",
-//     });
+    
+    const data = req.body;
 
-//     console.log(`POST : /match/random-match - ${err}`);
-//     next(createError(500, "Internal Server Error"));
-//   }
-// });
+    await createRankMatch({ email, ...data });
+
+    res.status(200).json({
+      message: "success",
+      data: null,
+      error: null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "fail",
+      data: null,
+      error: "error",
+    });
+
+    console.log(`POST : /match/rank - ${err}`);
+    next(createError(500, "Internal Server Error"));
+  }
+});
 
 router.patch("/", async (req, res, next) => {
   try {
