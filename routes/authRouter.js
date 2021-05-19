@@ -6,8 +6,6 @@ const User = require("../models/User");
 const { getMyLocations, getMyTeams } = require("../models/controllers/userController");
 const { getAppSports } = require("../models/controllers/sportsController");
 
-require("dotenv").config();
-
 router.post("/login", async (req, res, next) => {
   try {
     const { name, email } = req.body;

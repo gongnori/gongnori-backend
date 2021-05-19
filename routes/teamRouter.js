@@ -13,8 +13,6 @@ const {
 } = require("../models/controllers/teamController");
 const { getMyTeams } = require("../models/controllers/userController");
 
-require("dotenv").config();
-
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {

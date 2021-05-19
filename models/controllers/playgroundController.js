@@ -1,4 +1,4 @@
-const Playground = require("../Playground");
+const Playground = require("../Playground.js");
 
 const getAppPlaygrounds = async () => {
   const playgrounds = await Playground.find();
