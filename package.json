@@ -4,7 +4,7 @@
   "description": "gongnori server application",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "test": "mocha spec"
   },
   "repository": {
