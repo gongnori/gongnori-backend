@@ -13,17 +13,20 @@ const getMyTeams = async (email) => {
   if (!user.teams) { return [] }
 
   const teams = user.teams.map((team) => {
+    const { captin, location, emblem, members, repute, rank } = team;
+
     const matches = team.matches.map((match) => {
       const { playtime, playground } = match;
+      const { name, address } = playground;
 
       return {
         id: match["_id"],
         start: playtime.start,
         end: playtime.end,
-        playgroundName: playground.name,
-        province: playground.address.province,
-        city: playground.address.city,
-        district: playground.address.district,
+        playgroundName: name,
+        province: address.province,
+        city: address.city,
+        district: address.district,
         teams: match.teams[1]
           ? [match.teams[0].name, match.teams[1].name]
           : [match.teams[0].name],
@@ -33,16 +36,16 @@ const getMyTeams = async (email) => {
     return {
       id: team["_id"],
       name: team.name,
-      captin: team.captin.name,
-      province: team.location.province,
-      city: team.location.city,
-      district: team.location.district,
-      emblem: team.emblem,
-      members: team.members,
-      manner: team.repute.manner,
-      ability: team.repute.ability,
+      captin: captin.name,
+      province: location.province,
+      city: location.city,
+      district: location.district,
+      emblem: emblem,
+      members: members,
+      manner: repute.manner,
+      ability: repute.ability,
       matches: matches,
-      rank: team.rank,
+      rank: rank,
     };
   });
 
@@ -56,13 +59,15 @@ const getMyLocations = async (email) => {
   if (!user.locations) { return [] }
 
   const locations = user.locations.map((location) => {
+    const { province, city, district, position } = location;
+
     return {
       id: location["_id"],
-      province: location.province,
-      city: location.city,
-      district: location.district,
-      latitude: location.position.latitude,
-      longitude: location.position.longitude,
+      province: province,
+      city: city,
+      district: district,
+      latitude: position.latitude,
+      longitude: position.longitude,
     };
   });
 
@@ -73,7 +78,7 @@ const saveMyLocations = async (email, locations) => {
   const locationsOids = [];
 
   for (let i = 0; i < locations.length; i++) {
-    const { province, city, district } =  locations[i];
+    const { province, city, district } = locations[i];
     const locationOid = await Location.findOne({ province, city, district }, "_id");
 
     locationsOids.push(locationOid);

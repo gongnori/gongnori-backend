@@ -3,13 +3,15 @@ const Sports = require("../Sports");
 const Team = require("../Team");
 const User = require("../User");
 
-const getTeams = async (province, city, district, sports) => {
-  const [location, _sports] = await Promise.all([
+const getTeams = async (input) => {
+  const { province, city, district, sports } = input;
+
+  const [_location, _sports] = await Promise.all([
     await Location.findOne({ province, city, district }),
     await Sports.findOne({ sports }),
   ]);
 
-  const locationOid = location["_id"];
+  const locationOid = _location["_id"];
   const sportsOid = _sports["_id"];
 
   const teams = await Team.find({
@@ -22,6 +24,8 @@ const getTeams = async (province, city, district, sports) => {
     .populate({ path: "matches", populate: { path: "teams" } });
 
   const _teams = teams.map((team) => {
+    const { name, captin, location, emblem, members, repute, rank } = team;
+
     const matches = team.matches.map((match) => {
       const { playtime, playground } = match;
 
@@ -40,24 +44,26 @@ const getTeams = async (province, city, district, sports) => {
 
     return {
       id: team["_id"],
-      name: team.name,
-      captin: team.captin.name,
-      province: team.location.province,
-      city: team.location.city,
-      district: team.location.district,
-      emblem: team.emblem,
-      members: team.members,
-      manner: team.repute.manner,
-      ability: team.repute.ability,
+      name: name,
+      captin: captin.name,
+      province: _location.province,
+      city: location.city,
+      district: location.district,
+      emblem: emblem,
+      members: members,
+      manner: repute.manner,
+      ability: repute.ability,
       matches: matches,
-      rank: team.rank,
+      rank: rank,
     };
   });
 
   return _teams;
 };
 
-const createTeam = async (email, name, sports, location, imageS3) => {
+const createTeam = async (input) => {
+  const { email, name, location, sports, imageS3 } = input;
+
   const _user = await User.findOne({ email }, "_id teams");
   const userOid = _user["_id"];
 
@@ -76,7 +82,9 @@ const createTeam = async (email, name, sports, location, imageS3) => {
   return _team;
 };
 
-const registerUser = async (email, teamId) => {
+const registerUser = async (input) => {
+  const { email, teamId } = input;
+
   const [user, team] = await Promise.all([
     User.findOne({ email }, ""),
     Team.findById(teamId),
@@ -102,4 +110,49 @@ const registerUser = async (email, teamId) => {
   return user;
 };
 
-module.exports = { createTeam, getTeams, registerUser };
+const updateRank = async (input) => {
+  const { matchResult, manner, myTeamId, yourTeamId } = input;
+  const SCORE_FACTOR = 10;
+  const WINNING_POINT = 1;
+  const DEFEAT_POINT = 0;
+  const DRAW_POINT = 0.5;
+
+  const [myTeam, yourTeam] = await Promise.all([
+    await Team.findById(myTeamId),
+    await Team.findById(yourTeamId),
+  ]);
+
+  const myRankDifference = myTeam.rank - yourTeam.rank;
+  const yourRankDifference = -myTeam.rank + yourTeam.rank;
+
+  const myExpectedResult = 1 / (1 + 10 ** (-myRankDifference / 600));
+  const yourExpectedResult = 1 / (1 + 10 ** (-yourRankDifference / 600));
+
+  let myResult = 0;
+  let yourResult = 0;
+
+  if (matchResult === "승리") {
+    myResult = WINNING_POINT;
+    yourResult = DEFEAT_POINT;
+  } else if (matchResult === "패배") {
+    myResult = DEFEAT_POINT;
+    yourResult = WINNING_POINT;
+  } else if (matchResult === "무승부") {
+    myResult = DRAW_POINT;
+    yourResult = DRAW_POINT;
+  }
+
+  const myPoint = SCORE_FACTOR * (myResult - Math.round(100 * myExpectedResult) / 100);
+  const yourPoint = SCORE_FACTOR * (yourResult - Math.round(100 * yourExpectedResult) / 100);
+
+  await Promise.all([
+    await Team.findByIdAndUpdate(myTeamId, {
+      rank: myTeam.rank + myPoint,
+    }),
+    await Team.findByIdAndUpdate(yourTeamId, {
+      rank: yourTeam.rank + yourPoint,
+    }),
+  ]);
+};
+
+module.exports = { createTeam, getTeams, registerUser, updateRank };

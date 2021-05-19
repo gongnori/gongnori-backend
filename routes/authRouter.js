@@ -3,7 +3,7 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/User");
-const { getMyLocations, getMyTeams, saveMyLocations } = require("../models/controllers/userController");
+const { getMyLocations, getMyTeams } = require("../models/controllers/userController");
 const { getAppSports } = require("../models/controllers/sportsController");
 
 require("dotenv").config();
@@ -41,29 +41,6 @@ router.post("/login", async (req, res, next) => {
     });
 
     console.log(`POST : /auth/login - ${err.message}`);
-    next(createError(500, "Internal Server Error"));
-  }
-});
-
-router.post("/location", async (req, res, next) => {
-  try {
-    const { email, locations } = req.body;
-
-    saveMyLocations(email, locations);
-
-    res.status(200).json({
-      message: "success",
-      data: null,
-      error: null,
-    });
-  } catch (err) {
-    res.status(200).json({
-      message: "fail",
-      data: null,
-      error: "error",
-    });
-
-    console.log(`POST : /auth/location - ${err.message}`);
     next(createError(500, "Internal Server Error"));
   }
 });

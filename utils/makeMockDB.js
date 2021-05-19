@@ -1,19 +1,18 @@
 /**
- *  @function it returns user, match, team mockdb as json, based on playground database
+ * @function it makes user, match, team mockdb based on playground and location database
+ * @param {boolean} isMock
  */
 
 const mongoose = require("mongoose");
-const { uniqueNamesGenerator, adjectives, names } = require('unique-names-generator');
+const { uniqueNamesGenerator, adjectives, names } = require("unique-names-generator");
 
+const Location = require("../models/Location");
 const Match = require("../models/Match");
+const Message = require("../models/Message");
 const Playground = require("../models/Playground");
+const Sports = require("../models/Sports");
 const Team = require("../models/Team");
 const User = require("../models/User");
-const Location = require("../models/Location");
-const Sports = require("../models/Sports");
-const Message = require("../models/Message");
-
-const makeRandomNumber = require("./makeRandomNumber");
 
 const koreanNames = require("../models/koreanName.json");
 const koreanSurNames = require("../models/koreanSurName.json");
@@ -21,6 +20,8 @@ const locations = require("../models/location.json");
 const playgrounds = require("../models/playground.json");
 const emblems = require("../models/emblems.json");
 const sports = require("../models/sports.json");
+
+const makeRandomNumber = require("./makeRandomNumber");
 
 const makeMock = () => {
   const memberNum = 10;
@@ -57,7 +58,6 @@ const makeMock = () => {
     const randomLocationIdx = makeRandomNumber(0, 1);
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
-    const randomTeamNameIdx = makeRandomNumber(0, 199);
     const randomSportsIdx = makeRandomNumber(0, 2);
     const randomEmblemIdx = makeRandomNumber(0, emblems.length - 1);
     const randomRankPoint = makeRandomNumber(800, 1200);
@@ -92,10 +92,10 @@ const makeMock = () => {
       const randomUserSurNameIdx = makeRandomNumber(0, koreanSurNames.length - 1);
       const userName = `${koreanSurNames[randomUserSurNameIdx]}${koreanNames[randomUserNameIdx]}`;
 
-      const randomLocationIdx = makeRandomNumber(0, locations.length - 2);
+      const _randomLocationIdx = makeRandomNumber(0, locations.length - 2);
       const userLocations = [
-        locationsWithOid[randomLocationIdx],
-        locationsWithOid[randomLocationIdx + 1],
+        locationsWithOid[_randomLocationIdx],
+        locationsWithOid[_randomLocationIdx + 1],
       ];
 
       const user = {
@@ -181,7 +181,7 @@ const makeMock = () => {
   return { users, teams, matches, locationsWithOid, playgroundsWithOid };
 };
 
-const makeMockDB = async (isInitial) => {
+const makeMockDB = async (isMock) => {
   const { users, teams, matches, locationsWithOid, playgroundsWithOid } = makeMock();
 
   await Location.remove();
@@ -196,7 +196,7 @@ const makeMockDB = async (isInitial) => {
   await sports.forEach((doc) => Sports.create(doc));
   await playgroundsWithOid.forEach((doc) => Playground.create(doc));
 
-  if (isInitial) { return }
+  if (!isMock) { return }
 
   await matches.forEach((doc) => Match.create(doc));
   await teams.forEach((doc) => Team.create(doc));
