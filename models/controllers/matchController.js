@@ -97,6 +97,7 @@ const createMatch = async (input) => {
       match_type: type,
       teams: [team.id],
       is_rank: false,
+      is_fixed: false,
     }),
   ]);
 

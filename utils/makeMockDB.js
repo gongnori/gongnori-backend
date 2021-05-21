@@ -25,7 +25,7 @@ const makeRandomNumber = require("./makeRandomNumber");
 
 const makeMock = () => {
   const memberNum = 10;
-  const teamNum = 30;
+  const teamNum = 60;
   const matchNum = 5;
 
   const teams = [];
@@ -59,7 +59,7 @@ const makeMock = () => {
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
     const randomSportsIdx = makeRandomNumber(0, 2);
-    const randomEmblemIdx = makeRandomNumber(0, emblems.length - 1);
+    const randomEmblemIdx = makeRandomNumber(0, emblems[randomSportsIdx].length - 1);
     const randomRankPoint = makeRandomNumber(800, 1200);
 
     const team = {
@@ -74,7 +74,7 @@ const makeMock = () => {
         ability: randomAbility,
       },
       matches: [],
-      emblem: emblems[randomEmblemIdx],
+      emblem: emblems[randomSportsIdx][randomEmblemIdx],
       rank: randomRankPoint,
     };
 

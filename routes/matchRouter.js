@@ -60,6 +60,7 @@ router.post("/rank", async (req, res, next) => {
   }
 });
 
+// refactoring 필요... (promise all)
 router.patch("/", async (req, res, next) => {
   try {
     const { matchId, guest } = req.body;
@@ -67,7 +68,8 @@ router.patch("/", async (req, res, next) => {
     const guestTeam = await Team.findOne({ name: guest.team });
     const guestTeamOid = guestTeam["_id"];
 
-    const match = await Match.findById(matchId);
+    const match = await Match.findByIdAndUpdate(matchId, { is_fixed: true }, { new: true });
+    console.log(match)
     match.teams.push(guestTeamOid);
     await match.save();
 

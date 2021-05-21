@@ -11,6 +11,7 @@ const matchSchema = new mongoose.Schema({
   match_type: { type: String, require: true, lowercase: true },
   teams: [{ type: mongoose.Types.ObjectId, ref: "Team" }],
   is_rank: { type: Boolean },
+  is_fixed: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Match", matchSchema);
