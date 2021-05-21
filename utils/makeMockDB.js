@@ -55,17 +55,31 @@ const makeMock = () => {
 
   for (let i = 0; i < teamNum; i++) {
     const teamOid = mongoose.Types.ObjectId();
-    const randomLocationIdx = makeRandomNumber(0, 1);
+    let randomLocationIdx = makeRandomNumber(0, 1);
     const randomManner = makeRandomNumber(1, 5);
     const randomAbility = makeRandomNumber(1, 5);
-    const randomSportsIdx = makeRandomNumber(0, 2);
-    const randomEmblemIdx = makeRandomNumber(0, emblems[randomSportsIdx].length - 1);
     const randomRankPoint = makeRandomNumber(800, 1200);
+
+    let randomSportsIdx = makeRandomNumber(0, 2);
+    const randomEmblemIdx = makeRandomNumber(0, emblems[randomSportsIdx].length - 1);
+
+    let teamName;
+    let sportsOid;
+
+    if (i < 4) {
+      const teamNames = ["록히드FC", "스컹크FC", "수지FC", "강철FC"];
+      teamName = teamNames[i];
+      sportsOid = sportsWithOid[0];
+      randomLocationIdx = 0;
+    } else {
+      teamName = `${koreanNames[i]}팀`;
+      sportsOid = sportsWithOid[randomSportsIdx];
+    }
 
     const team = {
       _id: teamOid,
-      name: `${koreanNames[i]}팀`,
-      sports: sportsWithOid[randomSportsIdx],
+      name: teamName,
+      sports: sportsOid,
       members: [],
       captin: null,
       location: locationsWithOid[randomLocationIdx],
@@ -111,21 +125,35 @@ const makeMock = () => {
 
     for (let k = 0; k < matchNum; k++) {
       const matchOid = mongoose.Types.ObjectId();
-      const randomPlaygroundIdx = makeRandomNumber(0, playgroundsWithOid.length - 1);
-      const start = new Date();
+
+      let randomPlaygroundIdx;
+      let start;
+      let matchSports;
+
+      if (i < 2) {
+        randomPlaygroundIdx = 0;
+        start = new Date(`2021-05-${22 + k}T06:00:00`);
+        matchSports = sportsWithOid[0];
+        randomSportsIdx = 0;
+      } else {
+        randomPlaygroundIdx = makeRandomNumber(0, playgroundsWithOid.length - 1);
+        matchSports = sportsWithOid[randomSportsIdx];
+
+        
+        start = new Date();
+        start.setDate(start.getDate() - 1 + makeRandomNumber(0, 6));
+        start.setHours(makeRandomNumber(8, 20));
+        start.setMinutes(0);
+      }
 
       team.matches.push(matchOid);
-
-      start.setDate(start.getDate() + makeRandomNumber(0, 6));
-      start.setHours(makeRandomNumber(6, 20));
-      start.setMinutes(0);
 
       const end = new Date(start);
       end.setHours(end.getHours() + 2);
 
       const match = {
         _id: matchOid,
-        sports: sportsWithOid[randomSportsIdx],
+        sports: matchSports,
         created_at: Date.now(),
         playtime: {
           start,
@@ -149,8 +177,8 @@ const makeMock = () => {
   users.push({
     _id: oId1,
     teams: [teams[0]._id, teams[1]._id],
-    name: "minho kwon",
-    email: "minhob38@gmail.com",
+    name: "works skunk",
+    email: "skunkworksflightcontrol@gmail.com",
     locations: [
       locationsWithOid[0],
       locationsWithOid[1],
@@ -160,11 +188,11 @@ const makeMock = () => {
   users.push({
     _id: oId2,
     teams: [teams[2]._id, teams[3]._id],
-    name: "jerry",
-    email: "skunkworksflightcontrol@gmail.com",
+    name: "minho kwon",
+    email: "minhob38@gmail.com",
     locations: [
       locationsWithOid[0],
-      locationsWithOid[5],
+      locationsWithOid[1],
     ],
   });
 
