@@ -4,7 +4,7 @@
  */
 
 const mongoose = require("mongoose");
-const { uniqueNamesGenerator, adjectives, names } = require("unique-names-generator");
+const { uniqueNamesGenerator, adjectives, names, colors } = require("unique-names-generator");
 
 const Location = require("../models/Location");
 const Match = require("../models/Match");
@@ -25,7 +25,7 @@ const makeRandomNumber = require("./makeRandomNumber");
 
 const makeMock = () => {
   const memberNum = 10;
-  const teamNum = 60;
+  const teamNum = 75;
   const matchNum = 5;
 
   const teams = [];
@@ -65,15 +65,23 @@ const makeMock = () => {
 
     let teamName;
     let sportsOid;
+    let emblem;
 
     if (i < 4) {
       const teamNames = ["록히드FC", "스컹크FC", "수지FC", "강철FC"];
       teamName = teamNames[i];
       sportsOid = sportsWithOid[0];
       randomLocationIdx = 0;
+      emblem = [
+        "https://minho-bucket.s3.ap-northeast-2.amazonaws.com/lockheed_fc.jpeg",
+        "https://minho-bucket.s3.ap-northeast-2.amazonaws.com/skunk_fc.png",
+        "https://minho-bucket.s3.ap-northeast-2.amazonaws.com/sujifc_1.jpeg",
+        "https://minho-bucket.s3.ap-northeast-2.amazonaws.com/sujifc_2.jpeg",
+      ][i];
     } else {
       teamName = `${koreanNames[i]}팀`;
       sportsOid = sportsWithOid[randomSportsIdx];
+      emblem = emblems[randomSportsIdx][randomEmblemIdx];
     }
 
     const team = {
@@ -88,7 +96,7 @@ const makeMock = () => {
         ability: randomAbility,
       },
       matches: [],
-      emblem: emblems[randomSportsIdx][randomEmblemIdx],
+      emblem: emblem,
       rank: randomRankPoint,
     };
 
@@ -98,9 +106,9 @@ const makeMock = () => {
       team.captin = userOid;
 
       const email = uniqueNamesGenerator({
-        dictionaries: [adjectives, names],
+        dictionaries: [adjectives, names, colors],
         separator: "",
-      });
+      }).concat(makeRandomNumber(1, 99).toString());
 
       const randomUserNameIdx = makeRandomNumber(0, koreanNames.length - 1);
       const randomUserSurNameIdx = makeRandomNumber(0, koreanSurNames.length - 1);

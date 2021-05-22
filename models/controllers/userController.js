@@ -18,7 +18,7 @@ const getMyTeams = async (email) => {
     const matches = team.matches.map((match) => {
       const { playtime, playground } = match;
       const { name, address } = playground;
-console.log(match.teams[1])
+
       return {
         id: match["_id"],
         start: playtime.start,
