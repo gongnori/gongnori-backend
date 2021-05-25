@@ -5,13 +5,13 @@ const jwt = require("jsonwebtoken");
 const uploadImage = require("../middleware/uploadImage");
 
 const Team = require("../models/Team");
+const { getMyTeams } = require("../models/controllers/userController");
 const {
   createTeam,
   getTeams,
   registerUser,
   updateRank,
 } = require("../models/controllers/teamController");
-const { getMyTeams } = require("../models/controllers/userController");
 
 const router = express.Router();
 

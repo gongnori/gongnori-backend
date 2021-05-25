@@ -1,6 +1,7 @@
 const express = require("express");
 const createError = require("http-errors");
 const router = express.Router();
+
 const { getAppLocations } = require("../models/controllers/locationController");
 const { getAppSports } = require("../models/controllers/sportsController");
 const { getAppPlaygrounds } = require("../models/controllers/playgroundController");

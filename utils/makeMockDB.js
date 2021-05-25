@@ -1,6 +1,6 @@
 /**
  * @function it makes user, match, team mockdb based on playground and location database
- * @param {boolean} isMock
+ * @param {boolean} isMock - flag whether to make mock data base
  */
 
 const mongoose = require("mongoose");
@@ -147,7 +147,6 @@ const makeMock = () => {
         randomPlaygroundIdx = makeRandomNumber(0, playgroundsWithOid.length - 1);
         matchSports = sportsWithOid[randomSportsIdx];
 
-        
         start = new Date();
         start.setDate(start.getDate() - 1 + makeRandomNumber(0, 6));
         start.setHours(makeRandomNumber(8, 20));

@@ -1,8 +1,8 @@
 /**
- * @function it returns random number between min, max
- * @param {number} min
- * @param {number} max
- * @return {number} random number
+ * @function it returns random number between min and max
+ * @param {number} min - minimum value of random number
+ * @param {number} max - maximum value of random number
+ * @return {number} - random number
  */
 
 const makeRandomNumber = (min, max) => {

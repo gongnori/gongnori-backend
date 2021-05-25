@@ -160,4 +160,20 @@ const createRankMatch = async (input) => {
   return match;
 };
 
-module.exports = { createMatch, createRankMatch, getMatches };
+const fixMatch = async (input) => {
+  const { matchId, guest } = input;
+
+  const [guestTeam, match] = await Promise.all([
+    await Team.findOne({ name: guest.team }),
+    await Match.findByIdAndUpdate(matchId, { is_fixed: true }, { new: true }),
+  ]);
+
+  const guestTeamOid = guestTeam["_id"];
+
+  match.teams.push(guestTeamOid);
+  guestTeam.matches.push(matchId);
+
+  await Promise.all([await match.save(), await guestTeam.save()]);
+};
+
+module.exports = { createMatch, createRankMatch, fixMatch, getMatches };

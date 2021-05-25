@@ -2,6 +2,7 @@ const express = require("express");
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+
 const User = require("../models/User");
 const { getMyLocations, getMyTeams } = require("../models/controllers/userController");
 const { getAppSports } = require("../models/controllers/sportsController");
