@@ -27,7 +27,7 @@ router.get("/", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    console.log(`GET : /team - ${err}`);
+    console.log(`GET : /team/query - ${err}`);
     next(createError(500, "Internal Server Error"));
   }
 });

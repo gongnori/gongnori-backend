@@ -18,22 +18,10 @@ const getMatches = async (input) => {
   const matches = await Match.find({
     sports: sportsOid,
     "playtime.start": { $gte: thresMin, $lte: thresMax },
-  }).populate({
-    path: "playground",
-    populate: { path: "address" },
-  })
-    .populate({
-      path: "teams",
-      populate: { path: "location" },
-    })
-    .populate({
-      path: "teams",
-      populate: { path: "members", select: "name" },
-    })
-    .populate({
-      path: "teams",
-      populate: { path: "captin", select: "name" },
-    });
+  }).populate({ path: "playground", populate: { path: "address" } })
+    .populate({ path: "teams", populate: { path: "location" } })
+    .populate({ path: "teams", populate: { path: "members", select: "name" } })
+    .populate({ path: "teams", populate: { path: "captin", select: "name" } });
 
   const _matches = matches.filter((match) => {
     const { address } = match.playground;
@@ -83,15 +71,22 @@ const getMatches = async (input) => {
 };
 
 const createMatch = async (input) => {
-  const { sports, month, date, start, end, playground, type, team } = input;
+  const { sports, month, date, meridiem, start, end, playground, type, team } = input;
+  let _start = start;
+  let _end = end;
+
+  if (meridiem === "PM") {
+    _start = (parseInt(start, 10) + 12).toString();
+    _end = (parseInt(end, 10) + 12).toString();
+  }
 
   const [_team, match] = await Promise.all([
     await Team.findById(team.id, "matches"),
     await Match.create({
       sports: sports.id,
       playtime: {
-        start: new Date(new Date().getFullYear(), month - 1, date, start),
-        end: new Date(new Date().getFullYear(), month - 1, date, end),
+        start: new Date(new Date().getFullYear(), month - 1, date, _start),
+        end: new Date(new Date().getFullYear(), month - 1, date, _end),
       },
       playground: playground.id,
       match_type: type,
@@ -108,16 +103,24 @@ const createMatch = async (input) => {
 };
 
 const createRankMatch = async (input) => {
-  const { email, sports, month, date, start, end, playground, type, team } = input;
+  const { email, sports, month, date, meridiem, start, end, playground, type, team } = input;
   const { province, city, district } = playground;
+
+  let _start = start;
+  let _end = end;
+
+  if (meridiem === "PM") {
+    _start = (parseInt(start, 10) + 12).toString();
+    _end = (parseInt(end, 10) + 12).toString();
+  }
 
   const [myTeam, match, user, location] = await Promise.all([
     await Team.findById(team.id, "matches"),
     await Match.create({
       sports: sports.id,
       playtime: {
-        start: new Date(new Date().getFullYear(), month - 1, date, start),
-        end: new Date(new Date().getFullYear(), month - 1, date, end),
+        start: new Date(new Date().getFullYear(), month - 1, date, _start),
+        end: new Date(new Date().getFullYear(), month - 1, date, _end),
       },
       playground: playground.id,
       match_type: type,

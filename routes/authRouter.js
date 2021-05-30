@@ -22,7 +22,6 @@ router.post("/login", async (req, res, next) => {
     const sports = await getAppSports();
     const teams = await getMyTeams(email);
     const messages = await getMyMessages(email);
-
     const token = jwt.sign(
       { name, email },
       process.env.TOKEN_SECRET_KEY,

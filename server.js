@@ -91,4 +91,4 @@ server.listen(port, () => console.log(`server connection: port ${port}`));
 db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
-module.exports = server;
+module.exports = { server, db };

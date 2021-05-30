@@ -1,6 +1,6 @@
 /**
  * @function it makes user, match, team mockdb based on playground and location database
- * @param {boolean} isMock - flag whether to make mock data base
+ * @param {boolean} isMock - flag whether to make mock database
  */
 
 const mongoose = require("mongoose");
