@@ -4,8 +4,8 @@
   "description": "gongnori server application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha spec"
+    "start": "nodemon server.js",
+    "test": "mocha spec --timeout 10000"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,6 @@
   "homepage": "https://github.com/minhob38/gongnori-backend#readme",
   "dependencies": {
     "aws-sdk": "^2.906.0",
-    "cors": "^2.8.5",
     "dotenv": "^9.0.0",
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
@@ -32,8 +31,10 @@
     "unique-names-generator": "^4.5.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1"
+    "eslint-plugin-import": "^2.22.1",
+    "supertest": "^6.1.3"
   }
 }

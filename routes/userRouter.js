@@ -18,7 +18,7 @@ router.post("/location", async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    console.log(`POST : /auth/location - ${err.message}`);
+    console.log(`POST : /user/location - ${err.message}`);
     next(createError(500, "Internal Server Error"));
   }
 });

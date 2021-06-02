@@ -2,9 +2,13 @@ const express = require("express");
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const Match = require("../models/Match");
-const Team = require("../models/Team");
-const { createMatch, createRankMatch, getMatches } = require("../models/controllers/matchController");
+
+const {
+  createMatch,
+  createRankMatch,
+  fixMatch,
+  getMatches,
+} = require("../models/controllers/matchController");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -62,17 +66,9 @@ router.post("/rank", async (req, res, next) => {
 
 router.patch("/", async (req, res, next) => {
   try {
-    const { matchId, guest } = req.body;
+    const input = req.body;
 
-    const guestTeam = await Team.findOne({ name: guest.team });
-    const guestTeamOid = guestTeam["_id"];
-
-    const match = await Match.findById(matchId);
-    match.teams.push(guestTeamOid);
-    await match.save();
-
-    guestTeam.matches.push(matchId);
-    await guestTeam.save();
+    await fixMatch(input);
 
     res.status(200).json({
       message: "success",

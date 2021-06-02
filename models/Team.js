@@ -12,7 +12,7 @@ const teamSchema = new mongoose.Schema({
   },
   matches: [{ type: mongoose.Types.ObjectId, ref: "Match" }],
   emblem: { type: String },
-  rank: { type: Number },
+  rank: { type: Number, default: 1000 },
 });
 
 module.exports = mongoose.model("Team", teamSchema);

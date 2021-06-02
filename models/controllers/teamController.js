@@ -111,11 +111,12 @@ const registerUser = async (input) => {
 };
 
 const updateRank = async (input) => {
-  const { matchResult, manner, myTeamId, yourTeamId } = input;
   const SCORE_FACTOR = 10;
   const WINNING_POINT = 1;
   const DEFEAT_POINT = 0;
   const DRAW_POINT = 0.5;
+
+  const { matchResult, myTeamId, yourTeamId } = input;
 
   const [myTeam, yourTeam] = await Promise.all([
     await Team.findById(myTeamId),

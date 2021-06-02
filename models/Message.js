@@ -17,7 +17,7 @@ const messageSchema = new mongoose.Schema({
   chats: [{
     name: { type: String },
     content: { type: String },
-    date: { type: Date, default: Date.now()}
+    date: { type: Date, default: Date.now() },
   }],
   rank: { type: Number },
 });

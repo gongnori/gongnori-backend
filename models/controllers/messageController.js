@@ -62,6 +62,8 @@ const getMyMessages = async (email) => {
         teamId: guest.team["_id"],
       },
       matchId: match["_id"],
+      isMatchFixed: match["is_fixed"],
+      isRank: ["is_rank"],
       sports: sports["korean_name"],
       type: match["match_type"],
       playtime: {

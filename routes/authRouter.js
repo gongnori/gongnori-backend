@@ -2,9 +2,11 @@ const express = require("express");
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+
 const User = require("../models/User");
 const { getMyLocations, getMyTeams } = require("../models/controllers/userController");
 const { getAppSports } = require("../models/controllers/sportsController");
+const { getMyMessages } = require("../models/controllers/messageController");
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -19,7 +21,7 @@ router.post("/login", async (req, res, next) => {
     const locations = await getMyLocations(email);
     const sports = await getAppSports();
     const teams = await getMyTeams(email);
-
+    const messages = await getMyMessages(email);
     const token = jwt.sign(
       { name, email },
       process.env.TOKEN_SECRET_KEY,
@@ -28,7 +30,7 @@ router.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: { token, locations, teams, sports },
+      data: { token, locations, teams, sports, messages },
       error: null,
     });
   } catch (err) {

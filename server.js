@@ -37,6 +37,10 @@ io.on("connection", (socket) => {
 
       io.in(messageId).emit("send-message", _message.chats);
     });
+
+    socket.on("fix-match", () => {
+      io.in(messageId).emit("fix-match");
+    });
   });
 
   socket.on("leave-chat-room", async (messageId) => {
@@ -69,8 +73,8 @@ app.use(authenticate);
 
 app.use("/match", matchRouter);
 app.use("/message", messageRouter);
-app.use("/user", userRouter);
 app.use("/team", teamRouter);
+app.use("/user", userRouter);
 
 app.use((err, req, res, next) => {
   res.status = err.status || 500;
@@ -87,4 +91,4 @@ server.listen(port, () => console.log(`server connection: port ${port}`));
 db.once("open", () => console.log("MongoDB Connection Success! :)"));
 db.on("error", () => console.log("MongoDB Connection Error :("));
 
-module.exports = server;
+module.exports = { server, db };
